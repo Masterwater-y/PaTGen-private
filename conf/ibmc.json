@@ -1,0 +1,81 @@
+{
+    "222.201.144.195": {
+        "address": "https://222.201.144.218",
+        "username": "Administrator",
+        "password": "Admin@9000",
+        "verify_ca": false
+    },
+    "222.201.144.187": {
+        "address": "https://222.201.144.218",
+        "username": "Administrator",
+        "password": "Admin@9000",
+        "verify_ca": false
+    },
+    "222.201.144.198": {
+        "address": "https://222.201.144.100",
+        "username": "admin",
+        "password": "Admin@9000",
+        "verify_ca": false
+    },
+    "222.201.144.200": 
+    {
+        "address": "https://222.201.144.9",
+        "username": "Administrator",
+        "password": "Admin@9000",
+        "verify_ca": false
+    },
+    "14.14.23.6":{
+        "address": "https://10.10.17.56",
+        "username": "scut",
+        "password": "Scut@2023",
+        "verify_ca": false
+    },
+    "14.14.23.8":{
+        "address": "https://10.10.17.59",
+        "username": "scut",
+        "password": "Scut@2023",
+        "verify_ca": false
+    },
+    "14.14.23.10":{
+        "address": "https://10.10.17.94",
+        "username": "scut",
+        "password": "Scut@2023",
+        "verify_ca": false
+    },
+    "14.14.23.11":{
+        "address": "https://10.10.17.58",
+        "username": "scut",
+        "password": "Scut@2023",
+        "verify_ca": false
+    },
+        "10.10.27.20":{
+        "address": "https://10.10.26.20",
+        "username": "scut",
+        "password": "scut@2022",
+        "verify_ca": false
+    },
+    "10.10.27.30":{
+        "address": "https://10.10.26.30",
+        "username": "scut",
+        "password": "scut@2022",
+        "verify_ca": false
+    },
+    "10.10.27.31":{
+        "address": "https://10.10.26.31",
+        "username": "scut",
+        "password": "scut@2022",
+        "verify_ca": false
+    },
+    "10.10.27.32":{
+        "address": "https://10.10.26.32",
+        "username": "scut",
+        "password": "scut@2022",
+        "verify_ca": false
+    },
+    "10.10.27.33":{
+        "address": "https://10.10.26.33",
+        "username": "scut",
+        "password": "Scut@2023",
+        "verify_ca": false
+    }
+}

@@ -1,0 +1,225 @@
+{
+    "cascade_lake": {
+        "general_events": [
+            "cycles",
+            "instructions",
+            "branches",
+            "branch-misses",
+            "context-switches",
+            "migrations"
+        ],
+        "cache_events": [
+            "mem_inst_retired.all_loads",
+            "mem_inst_retired.all_stores",
+            "mem_load_retired.l1_hit",
+            "mem_load_retired.l1_miss",
+            "mem_load_retired.fb_hit",
+            "icache_64b.iftag_hit",
+            "icache_64b.iftag_miss",
+            "l2_rqsts.references",
+            "l2_rqsts.miss",
+            "longest_lat_cache.reference",
+            "longest_lat_cache.miss",
+            "l1d.replacement",
+            "l2_lines_in.all",
+            "l2_trans.l2_wb"
+        ],
+        "stall_events": [
+            "cycle_activity.stalls_total",
+            "cycle_activity.stalls_l1d_miss",
+            "cycle_activity.stalls_l2_miss",
+            "cycle_activity.stalls_l3_miss",
+            "cycle_activity.stalls_mem_any",
+            "uops_issued.stall_cycles",
+            "uops_executed.stall_cycles"
+        ],
+        "tlb_events": [
+            "dtlb_load_misses.stlb_hit",
+            "dtlb_load_misses.walk_completed",
+            "dtlb_store_misses.stlb_hit",
+            "dtlb_store_misses.walk_completed",
+            "itlb_misses.stlb_hit",
+            "itlb_misses.walk_completed",
+            "itlb.itlb_flush",
+            "tlb_flush.dtlb_thread",
+            "tlb_flush.stlb_any"
+        ],
+        "inst_events": [
+            "cpu_clk_unhalted.thread_any",
+            "inst_retired.any",
+            "arith.divider_active",
+            "fp_arith_inst_retired.scalar_double",
+            "fp_arith_inst_retired.scalar_single",
+            "sw_prefetch_access.nta",
+            "sw_prefetch_access.t0",
+            "sw_prefetch_access.t1_t2",
+            "sw_prefetch_access.prefetchw"
+        ],
+        "uops_events": [
+            "uops_retired.retire_slots",
+            "uops_issued.any",
+            "uops_executed.thread",
+            "idq.dsb_uops",
+            "idq.mite_uops",
+            "idq.ms_uops"
+        ],
+        "machine_events": [
+            "machine_clears.count",
+            "baclears.any",
+            "hw_interrupts.received"
+        ]
+    },
+    "sandy_bridge": {
+        "general_events": [
+            "cycles",
+            "instructions",
+            "branches",
+            "branch-misses",
+            "context-switches",
+            "migrations"
+        ],
+        "cache_events": [
+            "cache-misses",
+            "cache-references",
+            "L1-icache-load-misses",
+            "L1-dcache-loads",
+            "L1-dcache-load-misses",
+	    "longest_lat_cache.miss",
+            "longest_lat_cache.reference",
+            "l1d.replacement",
+            "l2_lines_in.all",
+            "l2_trans.l2_wb",
+            "l2_rqsts.references",
+            "l2_rqsts.miss"
+        ],
+        "stall_events": [
+            "cycle_activity.stalls_total",
+            "cycle_activity.stalls_l1d_miss",
+            "cycle_activity.stalls_l2_miss",
+            "cycle_activity.stalls_mem_any",
+            "uops_issued.stall_cycles",
+            "uops_executed.stall_cycles",
+            "uops_retired.stall_cycles"
+        ],
+        "tlb_events": [
+            "dtlb_load_misses.stlb_hit",
+            "dtlb_load_misses.walk_completed",
+            "dtlb_store_misses.stlb_hit",
+            "dtlb_store_misses.walk_completed",
+            "itlb_misses.stlb_hit",
+            "itlb_misses.walk_completed",
+            "itlb.itlb_flush",
+            "tlb_flush.dtlb_thread",
+            "tlb_flush.stlb_any"
+        ],
+        "inst_events": [
+            "cpu_clk_unhalted.thread_any",
+            "inst_retired.any",
+            "arith.fpu_div_active",
+            "fp_arith_inst_retired.scalar_double",
+            "fp_arith_inst_retired.scalar_single"
+        ],
+        "uops_events": [
+            "uops_retired.retire_slots",
+            "uops_issued.any",
+            "uops_executed.thread",
+            "idq.dsb_uops",
+            "idq.mite_uops",
+            "idq.ms_uops"
+        ],
+        "machine_events": [
+            "machine_clears.count",
+            "baclears.any"
+        ]
+    },
+    "kunpeng920": {
+        "general_events": [
+            "cycles",
+            "instructions",
+            "context-switches",
+            "migrations",
+            "branches",
+            "branch-misses"
+        ],
+        "cache_events": [
+            "L1-icache-loads",
+            "L1-icache-load-misses",
+            "L1-dcache-loads",
+            "L1-dcache-load-misses",
+            "armv8_pmuv3_0/l2d_cache/",
+            "armv8_pmuv3_0/l2d_cache_refill/",
+            "armv8_pmuv3_0/l2i_cache/",
+            "armv8_pmuv3_0/l2i_cache_refill/",
+            "armv8_pmuv3_0/ll_cache/",
+            "armv8_pmuv3_0/ll_cache_miss/",
+            "armv8_pmuv3_0/mem_access/"
+        ],
+        "branch_events": [
+            "armv8_pmuv3_0/br_pred/",
+            "armv8_pmuv3_0/br_retired/",
+            "armv8_pmuv3_0/br_mis_pred/",
+            "armv8_pmuv3_0/br_mis_pred_retired/",
+            "armv8_pmuv3_0/br_return_retired/",
+            "armv8_pmuv3_0/event=0x2013/"
+        ],
+        "tlb_events": [
+            "dTLB-loads",
+            "dTLB-load-misses",
+            "iTLB-loads",
+            "iTLB-load-misses",
+            "armv8_pmuv3_0/dtlb_walk/",
+            "armv8_pmuv3_0/itlb_walk/"
+        ],
+        "inst_events": [
+            "armv8_pmuv3_0/inst_retired/",
+            "armv8_pmuv3_0/inst_spec/",
+            "armv8_pmuv3_0/event=0x201d/",
+            "prf_req",
+            "hit_on_prf"
+        ],
+        "stall_events": [
+            "exe_stall_cycle",
+            "if_is_stall",
+            "fetch_bubble",
+            "iq_is_empty",
+            "mem_stall_anyload",
+            "mem_stall_l1miss",
+            "mem_stall_l2miss",
+            "armv8_pmuv3_0/event=0x7002/",
+            "armv8_pmuv3_0/event=0x7003/",
+            "armv8_pmuv3_0/event=0x7005/"
+        ]
+    },
+    "kunpeng916": {
+        "general_events": [
+            "cycles",
+            "instructions",
+            "context-switches",
+            "migrations",
+            "branches",
+            "branch-misses"
+        ],
+        "cache_events": [
+            "L1-icache-loads",                                                                                                                                                                                          
+            "L1-icache-load-misses",
+            "L1-dcache-loads",
+            "L1-dcache-load-misses",                        
+            "armv8_pmuv3_0/l2d_cache/",
+            "armv8_pmuv3_0/l2d_cache_refill/",
+            "armv8_pmuv3_0/l2d_cache_wb/",
+            "armv8_pmuv3_0/mem_access/"
+        ],
+        "branch_events": [
+            "armv8_pmuv3_0/br_pred/",
+            "armv8_pmuv3_0/br_mis_pred/"
+        ],
+        "tlb_events": [
+            "dTLB-load-misses",
+            "iTLB-load-misses"
+        ],
+        "inst_events": [
+            "armv8_pmuv3_0/inst_retired/",
+            "armv8_pmuv3_0/inst_spec/"
+        ]
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "global": {
+        "memory_util": 1,
+        "memory_size": 16
+    },
+    "blocks": [
+        [
+            {
+                "type": "memory_block",
+                "iterations": 18571428447,
+                "stride": 12,
+                "delay": 0,
+                "rank": 10
+            },
+            {
+                "type": "add_block",
+                "iterations": 183333333326,
+                "delay": 0,
+                "rank": 9
+            },
+            {
+                "type": "div_block",
+                "iterations": 18571428447,
+                "delay": 0,
+                "rank": 1
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 2860000000,
+                "delay": 0,
+                "rank": 32
+            }
+        ]
+    ]
+}

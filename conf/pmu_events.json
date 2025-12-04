@@ -1,0 +1,20 @@
+{
+    "kunpeng920": {
+        "general_events": [
+            "cycles",
+            "instructions",
+            "context-switches",
+            "migrations",
+            "branches",
+            "branch-misses"
+        ],
+        "cache_events": [
+            "L1-dcache-loads",
+            "L1-dcache-load-misses",
+            "armv8_pmuv3_0/ll_cache/",
+            "armv8_pmuv3_0/ll_cache_miss/",
+            "armv8_pmuv3_0/mem_access/"
+        ]
+    }
+
+}

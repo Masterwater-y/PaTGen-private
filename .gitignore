@@ -1,0 +1,10 @@
+*.out
+*.log
+*.csv
+result/
+*.png
+workloads/backup/
+generate/*.csv
+generate/backup/
+.vscode/
+_pycache_/
