@@ -1,0 +1,15 @@
+{
+    "global": {
+        "memory_util": 1,
+        "memory_size": 16
+    },
+    "blocks": [
+        [
+            {
+                "type": "sqrt_block",
+                "iterations": 1200000000,
+                "rank": 4
+            }
+        ]
+    ]
+}

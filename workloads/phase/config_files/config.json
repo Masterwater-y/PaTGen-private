@@ -7,1500 +7,1480 @@
         [
             {
                 "type": "sqrt_block",
-                "iterations": 297911359,
+                "iterations": 289292849,
+                "delay": 0,
+                "rank": 1
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 244445976,
+                "delay": 3,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 309770342,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 163969855,
+                "delay": 2,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 95573809,
+                "delay": 4,
+                "rank": 1
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 55111159,
                 "delay": 2,
                 "rank": 1
             },
             {
                 "type": "sqrt_block",
-                "iterations": 267241116,
-                "delay": 2,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 262349470,
-                "delay": 4,
-                "rank": 3
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 236992220,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 35606059,
-                "delay": 1,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 176781946,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 294990207,
-                "delay": 2,
-                "rank": 1
-            },
-            {
-                "type": "div_block",
-                "iterations": 1110252182,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "add_block",
-                "iterations": 19550659206,
-                "delay": 1,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1657981878,
-                "stride": 1,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1403676542,
-                "stride": 2,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1224680984,
-                "stride": 3,
-                "delay": 4,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1465960811,
-                "stride": 4,
-                "delay": 4,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1370298608,
-                "stride": 5,
-                "delay": 4,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 932012875,
-                "stride": 6,
+                "iterations": 180269136,
                 "delay": 5,
                 "rank": 2
             },
             {
-                "type": "memory_block",
-                "iterations": 1126641590,
-                "stride": 7,
-                "delay": 5,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 2028008460,
-                "stride": 8,
+                "type": "sqrt_block",
+                "iterations": 286462967,
                 "delay": 1,
                 "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1868584572,
-                "stride": 9,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1752758257,
-                "stride": 10,
-                "delay": 3,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1478651527,
-                "stride": 11,
-                "delay": 5,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1357843773,
-                "stride": 12,
-                "delay": 4,
-                "rank": 1
-            }
-        ],
-        [
-            {
-                "type": "sqrt_block",
-                "iterations": 163816094,
-                "delay": 4,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 322385935,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 299247648,
-                "delay": 2,
-                "rank": 4
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 285529189,
-                "delay": 2,
-                "rank": 7
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 306667704,
-                "delay": 1,
-                "rank": 8
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 308983574,
-                "delay": 0,
-                "rank": 5
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 162236959,
-                "delay": 2,
-                "rank": 2
             },
             {
                 "type": "div_block",
-                "iterations": 1261344857,
-                "delay": 3,
+                "iterations": 1062204224,
+                "delay": 0,
                 "rank": 2
             },
             {
                 "type": "add_block",
-                "iterations": 18559628694,
+                "iterations": 17717200946,
                 "delay": 2,
-                "rank": 4
+                "rank": 3
             },
             {
                 "type": "memory_block",
-                "iterations": 2046755942,
+                "iterations": 1530657851,
                 "stride": 1,
                 "delay": 0,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1754674968,
-                "stride": 2,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1554715364,
-                "stride": 3,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1924220735,
-                "stride": 4,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1849256793,
-                "stride": 5,
-                "delay": 3,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1247986430,
-                "stride": 6,
-                "delay": 3,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1606305747,
-                "stride": 7,
-                "delay": 4,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1486625506,
-                "stride": 8,
-                "delay": 5,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1426458142,
-                "stride": 9,
-                "delay": 6,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1395353266,
-                "stride": 10,
-                "delay": 2,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1246277249,
-                "stride": 11,
-                "delay": 2,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1207647215,
-                "stride": 12,
-                "delay": 2,
-                "rank": 2
-            }
-        ],
-        [
-            {
-                "type": "sqrt_block",
-                "iterations": 134873902,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 261268710,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 224192646,
-                "delay": 0,
-                "rank": 4
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 238849418,
-                "delay": 1,
-                "rank": 5
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 216938789,
-                "delay": 2,
-                "rank": 4
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 134458242,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "div_block",
-                "iterations": 1214098821,
-                "delay": 4,
-                "rank": 2
-            },
-            {
-                "type": "add_block",
-                "iterations": 14608352883,
-                "delay": 1,
-                "rank": 7
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1553775843,
-                "stride": 1,
-                "delay": 0,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1240935925,
+                "iterations": 1335319768,
                 "stride": 2,
                 "delay": 0,
-                "rank": 3
+                "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1022233656,
+                "iterations": 1122770738,
                 "stride": 3,
-                "delay": 3,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1208719786,
-                "stride": 4,
-                "delay": 0,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1592099115,
-                "stride": 5,
-                "delay": 1,
+                "delay": 7,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 941897156,
-                "stride": 6,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1070972507,
-                "stride": 7,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 851332958,
-                "stride": 8,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1292826580,
-                "stride": 9,
-                "delay": 2,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 981077016,
-                "stride": 10,
-                "delay": 1,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 428660857,
-                "stride": 11,
-                "delay": 2,
-                "rank": 1
-            }
-        ],
-        [
-            {
-                "type": "sqrt_block",
-                "iterations": 98700090,
-                "delay": 2,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 133670525,
-                "delay": 2,
-                "rank": 3
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 154745172,
-                "delay": 2,
-                "rank": 5
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 173368085,
-                "delay": 0,
-                "rank": 8
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 176885039,
-                "delay": 1,
-                "rank": 11
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 169036123,
-                "delay": 1,
-                "rank": 15
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 98049225,
-                "delay": 2,
-                "rank": 2
-            },
-            {
-                "type": "div_block",
-                "iterations": 855649274,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "add_block",
-                "iterations": 11239975818,
-                "delay": 1,
-                "rank": 6
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1091625068,
-                "stride": 1,
-                "delay": 0,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 909294555,
-                "stride": 2,
-                "delay": 1,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 785387782,
-                "stride": 3,
-                "delay": 3,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 974910970,
-                "stride": 4,
-                "delay": 1,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 917810286,
-                "stride": 5,
-                "delay": 3,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 871292414,
-                "stride": 6,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1122275605,
-                "stride": 7,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1005928959,
-                "stride": 8,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 928243018,
-                "stride": 9,
-                "delay": 2,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 881738762,
-                "stride": 10,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 732908885,
-                "stride": 11,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 677024112,
-                "stride": 12,
-                "delay": 4,
-                "rank": 2
-            }
-        ],
-        [
-            {
-                "type": "sqrt_block",
-                "iterations": 103253023,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 141604103,
-                "delay": 1,
-                "rank": 3
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 160240179,
-                "delay": 1,
-                "rank": 5
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 144800502,
-                "delay": 1,
-                "rank": 8
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 155932716,
-                "delay": 1,
-                "rank": 11
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 102098718,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "div_block",
-                "iterations": 688203714,
-                "delay": 0,
-                "rank": 3
-            },
-            {
-                "type": "add_block",
-                "iterations": 9508297935,
-                "delay": 1,
-                "rank": 11
-            },
-            {
-                "type": "memory_block",
-                "iterations": 921057380,
-                "stride": 1,
-                "delay": 0,
-                "rank": 5
-            },
-            {
-                "type": "memory_block",
-                "iterations": 934074264,
-                "stride": 2,
-                "delay": 1,
-                "rank": 4
-            },
-            {
-                "type": "memory_block",
-                "iterations": 789190658,
-                "stride": 3,
-                "delay": 2,
-                "rank": 4
-            },
-            {
-                "type": "memory_block",
-                "iterations": 976126120,
-                "stride": 4,
-                "delay": 1,
-                "rank": 4
-            },
-            {
-                "type": "memory_block",
-                "iterations": 903530021,
-                "stride": 5,
-                "delay": 1,
-                "rank": 4
-            },
-            {
-                "type": "memory_block",
-                "iterations": 706555818,
-                "stride": 6,
-                "delay": 2,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 911047002,
-                "stride": 7,
-                "delay": 1,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 784103555,
-                "stride": 8,
-                "delay": 0,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1029566180,
-                "stride": 9,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 942077036,
-                "stride": 10,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 688757166,
-                "stride": 11,
-                "delay": 3,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 573662284,
-                "stride": 12,
-                "delay": 4,
-                "rank": 2
-            }
-        ],
-        [
-            {
-                "type": "sqrt_block",
-                "iterations": 95534581,
-                "delay": 3,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 128382114,
-                "delay": 2,
-                "rank": 3
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 148957109,
-                "delay": 1,
-                "rank": 5
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 169914821,
-                "delay": 1,
-                "rank": 8
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 173234033,
-                "delay": 0,
-                "rank": 11
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 171297310,
-                "delay": 1,
-                "rank": 16
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 94720318,
-                "delay": 3,
-                "rank": 2
-            },
-            {
-                "type": "div_block",
-                "iterations": 769534749,
-                "delay": 2,
-                "rank": 2
-            },
-            {
-                "type": "add_block",
-                "iterations": 10270132819,
-                "delay": 1,
-                "rank": 5
-            },
-            {
-                "type": "memory_block",
-                "iterations": 899605690,
-                "stride": 1,
-                "delay": 0,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 767702298,
-                "stride": 2,
-                "delay": 0,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1017623594,
-                "stride": 3,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 849299291,
-                "stride": 4,
-                "delay": 0,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1227093539,
-                "stride": 5,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 811951201,
-                "stride": 6,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1064422947,
-                "stride": 7,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 984523787,
-                "stride": 8,
-                "delay": 2,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 945621172,
-                "stride": 9,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 928174963,
-                "stride": 10,
-                "delay": 3,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 826974986,
-                "stride": 11,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 803051806,
-                "stride": 12,
-                "delay": 3,
-                "rank": 2
-            }
-        ],
-        [
-            {
-                "type": "sqrt_block",
-                "iterations": 143493931,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 196651777,
-                "delay": 3,
-                "rank": 3
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 222407159,
-                "delay": 2,
-                "rank": 5
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 224140341,
-                "delay": 0,
-                "rank": 8
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 241673564,
-                "delay": 0,
-                "rank": 10
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 205603108,
-                "delay": 2,
-                "rank": 5
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 143112208,
-                "delay": 4,
-                "rank": 2
-            },
-            {
-                "type": "div_block",
-                "iterations": 1469148289,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "add_block",
-                "iterations": 15172629259,
-                "delay": 0,
-                "rank": 10
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1324679923,
-                "stride": 1,
-                "delay": 2,
-                "rank": 5
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1335389095,
-                "stride": 2,
-                "delay": 2,
-                "rank": 4
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1118045581,
-                "stride": 3,
-                "delay": 0,
-                "rank": 4
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1379594164,
-                "stride": 4,
-                "delay": 0,
-                "rank": 4
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1260000484,
-                "stride": 5,
-                "delay": 3,
-                "rank": 4
-            },
-            {
-                "type": "memory_block",
-                "iterations": 980252057,
-                "stride": 6,
-                "delay": 2,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1241436755,
-                "stride": 7,
-                "delay": 0,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1052143972,
-                "stride": 8,
-                "delay": 4,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1347648823,
-                "stride": 9,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1196277975,
-                "stride": 10,
-                "delay": 4,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 827219296,
-                "stride": 11,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1299486527,
-                "stride": 12,
-                "delay": 2,
-                "rank": 1
-            }
-        ],
-        [
-            {
-                "type": "sqrt_block",
-                "iterations": 352321682,
-                "delay": 1,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 344301807,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 331342639,
-                "delay": 1,
-                "rank": 4
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 344356910,
-                "delay": 0,
-                "rank": 7
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 336294452,
-                "delay": 1,
-                "rank": 10
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 347637461,
-                "delay": 0,
-                "rank": 14
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 346020371,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "div_block",
-                "iterations": 2113549124,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "add_block",
-                "iterations": 9551719094,
-                "delay": 11,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 2073652349,
-                "stride": 1,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 2156268573,
-                "stride": 2,
-                "delay": 1,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1112551086,
-                "stride": 3,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1457254025,
+                "iterations": 1349561489,
                 "stride": 4,
                 "delay": 7,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1591896041,
+                "iterations": 1223769260,
                 "stride": 5,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1279708938,
-                "stride": 6,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1792667032,
-                "stride": 7,
-                "delay": 4,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1842883190,
-                "stride": 8,
-                "delay": 3,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1989047423,
-                "stride": 9,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 2124890965,
-                "stride": 10,
-                "delay": 2,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 2193774802,
-                "stride": 11,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 2327703161,
-                "stride": 12,
-                "delay": 0,
-                "rank": 2
-            }
-        ],
-        [
-            {
-                "type": "sqrt_block",
-                "iterations": 402657814,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 382946909,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 317008932,
-                "delay": 0,
-                "rank": 4
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 370964708,
-                "delay": 0,
-                "rank": 4
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 292318647,
-                "delay": 1,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 200448767,
-                "delay": 3,
-                "rank": 2
-            },
-            {
-                "type": "div_block",
-                "iterations": 1750654546,
-                "delay": 3,
-                "rank": 2
-            },
-            {
-                "type": "add_block",
-                "iterations": 23019510093,
-                "delay": 0,
-                "rank": 6
-            },
-            {
-                "type": "memory_block",
-                "iterations": 2238257167,
-                "stride": 1,
-                "delay": 1,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1865364826,
-                "stride": 2,
-                "delay": 3,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1610630665,
-                "stride": 3,
                 "delay": 5,
-                "rank": 3
+                "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 2003026627,
-                "stride": 4,
-                "delay": 4,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1884125821,
-                "stride": 5,
-                "delay": 0,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1793885511,
+                "iterations": 1088000915,
                 "stride": 6,
-                "delay": 2,
+                "delay": 6,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 2310076921,
+                "iterations": 1854167646,
                 "stride": 7,
-                "delay": 2,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 2072702173,
-                "stride": 8,
                 "delay": 0,
-                "rank": 2
+                "rank": 1
             },
             {
                 "type": "memory_block",
-                "iterations": 1914537442,
+                "iterations": 1790524185,
+                "stride": 8,
+                "delay": 2,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 2001842179,
                 "stride": 9,
                 "delay": 0,
-                "rank": 2
+                "rank": 1
             },
             {
                 "type": "memory_block",
-                "iterations": 1817465086,
+                "iterations": 1533197723,
                 "stride": 10,
-                "delay": 0,
-                "rank": 2
+                "delay": 3,
+                "rank": 1
             },
             {
                 "type": "memory_block",
-                "iterations": 1516679064,
+                "iterations": 1407340746,
                 "stride": 11,
-                "delay": 0,
-                "rank": 2
+                "delay": 4,
+                "rank": 1
             },
             {
                 "type": "memory_block",
-                "iterations": 1405377891,
+                "iterations": 1163103796,
                 "stride": 12,
-                "delay": 10,
-                "rank": 2
+                "delay": 6,
+                "rank": 1
             }
         ],
         [
             {
                 "type": "sqrt_block",
-                "iterations": 228177228,
-                "delay": 1,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 217343760,
-                "delay": 2,
+                "iterations": 164599722,
+                "delay": 5,
                 "rank": 2
             },
             {
                 "type": "sqrt_block",
-                "iterations": 198765826,
-                "delay": 3,
+                "iterations": 316519929,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 290481134,
+                "delay": 0,
                 "rank": 4
             },
             {
                 "type": "sqrt_block",
-                "iterations": 213693991,
+                "iterations": 306851886,
                 "delay": 1,
                 "rank": 6
             },
             {
                 "type": "sqrt_block",
-                "iterations": 214719384,
+                "iterations": 284192357,
                 "delay": 2,
                 "rank": 7
             },
             {
                 "type": "sqrt_block",
-                "iterations": 219964793,
+                "iterations": 296465487,
                 "delay": 2,
-                "rank": 2
+                "rank": 6
             },
             {
                 "type": "sqrt_block",
-                "iterations": 223983296,
-                "delay": 1,
-                "rank": 1
+                "iterations": 162775123,
+                "delay": 5,
+                "rank": 2
             },
             {
                 "type": "div_block",
-                "iterations": 1331973629,
-                "delay": 2,
-                "rank": 1
+                "iterations": 1226008974,
+                "delay": 5,
+                "rank": 2
             },
             {
                 "type": "add_block",
-                "iterations": 1811316999,
+                "iterations": 16172632969,
                 "delay": 4,
-                "rank": 1
+                "rank": 4
             },
             {
                 "type": "memory_block",
-                "iterations": 1197930181,
+                "iterations": 1860060198,
                 "stride": 1,
-                "delay": 2,
-                "rank": 1
+                "delay": 0,
+                "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1295093720,
+                "iterations": 1654059604,
                 "stride": 2,
-                "delay": 2,
-                "rank": 1
+                "delay": 1,
+                "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1369908368,
+                "iterations": 1408986341,
                 "stride": 3,
-                "delay": 1,
-                "rank": 1
+                "delay": 0,
+                "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 904500686,
+                "iterations": 1751930155,
                 "stride": 4,
-                "delay": 1,
+                "delay": 0,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1004317223,
+                "iterations": 1626072877,
                 "stride": 5,
-                "delay": 1,
+                "delay": 3,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 823818046,
+                "iterations": 1480131833,
                 "stride": 6,
                 "delay": 5,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1162638281,
+                "iterations": 1285709089,
                 "stride": 7,
-                "delay": 4,
+                "delay": 3,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1206088918,
+                "iterations": 1298792725,
                 "stride": 8,
-                "delay": 1,
+                "delay": 6,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1313417456,
+                "iterations": 1627646802,
                 "stride": 9,
-                "delay": 1,
+                "delay": 3,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1411272221,
+                "iterations": 1231581246,
                 "stride": 10,
+                "delay": 7,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1183980813,
+                "stride": 11,
                 "delay": 2,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1470134122,
-                "stride": 11,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1567539492,
+                "iterations": 1077058331,
                 "stride": 12,
-                "delay": 1,
+                "delay": 4,
                 "rank": 2
             }
         ],
         [
             {
                 "type": "sqrt_block",
-                "iterations": 174656238,
-                "delay": 2,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 157537589,
+                "iterations": 141516783,
                 "delay": 0,
                 "rank": 2
             },
             {
                 "type": "sqrt_block",
-                "iterations": 175880834,
+                "iterations": 175990813,
                 "delay": 0,
                 "rank": 3
             },
             {
                 "type": "sqrt_block",
-                "iterations": 162678612,
+                "iterations": 219496028,
+                "delay": 2,
+                "rank": 4
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 252819083,
                 "delay": 0,
                 "rank": 4
             },
             {
                 "type": "sqrt_block",
-                "iterations": 188161790,
-                "delay": 1,
+                "iterations": 151473439,
+                "delay": 0,
                 "rank": 2
             },
             {
                 "type": "sqrt_block",
-                "iterations": 169766194,
-                "delay": 0,
-                "rank": 6
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 170470458,
-                "delay": 2,
-                "rank": 1
-            },
-            {
-                "type": "div_block",
-                "iterations": 798705624,
-                "delay": 4,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 367384101,
-                "stride": 2,
-                "delay": 6,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 600318162,
-                "stride": 3,
-                "delay": 5,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 871895708,
-                "stride": 4,
-                "delay": 4,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1167141459,
-                "stride": 5,
-                "delay": 1,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 579090180,
-                "stride": 6,
+                "iterations": 205605935,
                 "delay": 3,
                 "rank": 2
             },
             {
+                "type": "sqrt_block",
+                "iterations": 138256572,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "div_block",
+                "iterations": 1212237769,
+                "delay": 4,
+                "rank": 2
+            },
+            {
+                "type": "add_block",
+                "iterations": 15990548645,
+                "delay": 0,
+                "rank": 6
+            },
+            {
                 "type": "memory_block",
-                "iterations": 863714157,
-                "stride": 7,
-                "delay": 2,
+                "iterations": 1468120698,
+                "stride": 1,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1218548690,
+                "stride": 2,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1410626579,
+                "stride": 3,
+                "delay": 0,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 959212520,
-                "stride": 8,
+                "iterations": 1674769550,
+                "stride": 4,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1388495960,
+                "stride": 5,
                 "delay": 1,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1111648892,
+                "iterations": 1095534651,
+                "stride": 6,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 848386801,
+                "stride": 7,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1325774720,
+                "stride": 8,
+                "delay": 1,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1002494852,
                 "stride": 9,
                 "delay": 0,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1241393822,
+                "iterations": 623553262,
+                "stride": 10,
+                "delay": 1,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 185643522,
+                "stride": 11,
+                "delay": 2,
+                "rank": 1
+            }
+        ],
+        [
+            {
+                "type": "sqrt_block",
+                "iterations": 101459634,
+                "delay": 2,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 132804799,
+                "delay": 3,
+                "rank": 3
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 150228688,
+                "delay": 1,
+                "rank": 5
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 163401497,
+                "delay": 0,
+                "rank": 8
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 172627656,
+                "delay": 0,
+                "rank": 9
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 166432390,
+                "delay": 0,
+                "rank": 10
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 168322865,
+                "delay": 0,
+                "rank": 6
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 99461981,
+                "delay": 3,
+                "rank": 2
+            },
+            {
+                "type": "div_block",
+                "iterations": 836018138,
+                "delay": 3,
+                "rank": 2
+            },
+            {
+                "type": "add_block",
+                "iterations": 10042473862,
+                "delay": 1,
+                "rank": 6
+            },
+            {
+                "type": "memory_block",
+                "iterations": 998953721,
+                "stride": 1,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 867780910,
+                "stride": 2,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 708617930,
+                "stride": 3,
+                "delay": 3,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 888711139,
+                "stride": 4,
+                "delay": 3,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1196145163,
+                "stride": 5,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1044570817,
+                "stride": 6,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 880207825,
+                "stride": 7,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 848956020,
+                "stride": 8,
+                "delay": 2,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 813689348,
+                "stride": 9,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 748603061,
                 "stride": 10,
                 "delay": 1,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 911236963,
+                "iterations": 668588765,
+                "stride": 11,
+                "delay": 4,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1104925193,
+                "stride": 12,
+                "delay": 0,
+                "rank": 1
+            }
+        ],
+        [
+            {
+                "type": "sqrt_block",
+                "iterations": 140042360,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 144788821,
+                "delay": 1,
+                "rank": 6
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 158906639,
+                "delay": 1,
+                "rank": 7
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 159291657,
+                "delay": 1,
+                "rank": 18
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 136269153,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "div_block",
+                "iterations": 822343479,
+                "delay": 1,
+                "rank": 4
+            },
+            {
+                "type": "add_block",
+                "iterations": 9602430962,
+                "delay": 1,
+                "rank": 9
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1008994099,
+                "stride": 1,
+                "delay": 1,
+                "rank": 4
+            },
+            {
+                "type": "memory_block",
+                "iterations": 912114164,
+                "stride": 2,
+                "delay": 0,
+                "rank": 4
+            },
+            {
+                "type": "memory_block",
+                "iterations": 732694131,
+                "stride": 3,
+                "delay": 2,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1060903213,
+                "stride": 4,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 592228638,
+                "stride": 5,
+                "delay": 4,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 271197510,
+                "stride": 7,
+                "delay": 0,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 963800822,
+                "stride": 9,
+                "delay": 1,
+                "rank": 13
+            }
+        ],
+        [
+            {
+                "type": "sqrt_block",
+                "iterations": 96712788,
+                "delay": 3,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 126276359,
+                "delay": 2,
+                "rank": 3
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 179710551,
+                "delay": 0,
+                "rank": 4
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 179415428,
+                "delay": 0,
+                "rank": 7
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 171565529,
+                "delay": 1,
+                "rank": 9
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 169636293,
+                "delay": 1,
+                "rank": 10
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 173742593,
+                "delay": 1,
+                "rank": 7
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 95346649,
+                "delay": 4,
+                "rank": 2
+            },
+            {
+                "type": "div_block",
+                "iterations": 747169283,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "add_block",
+                "iterations": 11199117169,
+                "delay": 1,
+                "rank": 4
+            },
+            {
+                "type": "memory_block",
+                "iterations": 814761149,
+                "stride": 1,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1085376282,
+                "stride": 2,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 916538726,
+                "stride": 3,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1156522252,
+                "stride": 4,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1070654770,
+                "stride": 5,
+                "delay": 2,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 970349962,
+                "stride": 6,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 840100726,
+                "stride": 7,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 850120643,
+                "stride": 8,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1132485377,
+                "stride": 9,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 813462018,
+                "stride": 10,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 778936969,
+                "stride": 11,
+                "delay": 4,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 709896706,
+                "stride": 12,
+                "delay": 4,
+                "rank": 2
+            }
+        ],
+        [
+            {
+                "type": "sqrt_block",
+                "iterations": 152523227,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 199666940,
+                "delay": 3,
+                "rank": 3
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 218755098,
+                "delay": 2,
+                "rank": 5
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 227838515,
+                "delay": 0,
+                "rank": 8
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 226436253,
+                "delay": 0,
+                "rank": 8
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 216920706,
+                "delay": 1,
+                "rank": 7
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 147471870,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "div_block",
+                "iterations": 1445099962,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "add_block",
+                "iterations": 15374026296,
+                "delay": 0,
+                "rank": 9
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1527900884,
+                "stride": 1,
+                "delay": 1,
+                "rank": 4
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1291775115,
+                "stride": 2,
+                "delay": 0,
+                "rank": 4
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1340397088,
+                "stride": 3,
+                "delay": 1,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1260259860,
+                "stride": 4,
+                "delay": 2,
+                "rank": 4
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1440838047,
+                "stride": 5,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1185101734,
+                "stride": 6,
+                "delay": 3,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1429152247,
+                "stride": 7,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1261660997,
+                "stride": 8,
+                "delay": 3,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1449011271,
+                "stride": 9,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 934099654,
+                "stride": 10,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1349388204,
+                "stride": 11,
+                "delay": 2,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 728437963,
+                "stride": 12,
+                "delay": 0,
+                "rank": 1
+            }
+        ],
+        [
+            {
+                "type": "sqrt_block",
+                "iterations": 332333751,
+                "delay": 1,
+                "rank": 1
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 320900040,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 306806690,
+                "delay": 1,
+                "rank": 4
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 352491990,
+                "delay": 0,
+                "rank": 6
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 342496306,
+                "delay": 1,
+                "rank": 8
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 329827884,
+                "delay": 0,
+                "rank": 9
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 321720352,
+                "delay": 1,
+                "rank": 8
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 334140428,
+                "delay": 0,
+                "rank": 1
+            },
+            {
+                "type": "div_block",
+                "iterations": 1963637993,
+                "delay": 0,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1688869274,
+                "stride": 1,
+                "delay": 6,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1838348386,
+                "stride": 2,
+                "delay": 0,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1967793135,
+                "stride": 3,
+                "delay": 0,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1287761442,
+                "stride": 4,
+                "delay": 8,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1410228401,
+                "stride": 5,
+                "delay": 7,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1504222293,
+                "stride": 6,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1443571882,
+                "stride": 7,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1699341841,
+                "stride": 8,
+                "delay": 4,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1790315622,
+                "stride": 9,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1997564954,
+                "stride": 10,
+                "delay": 2,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 2185889165,
+                "stride": 11,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 2321337220,
+                "stride": 12,
+                "delay": 0,
+                "rank": 2
+            }
+        ],
+        [
+            {
+                "type": "sqrt_block",
+                "iterations": 204593624,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 368640498,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 373827803,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 381825834,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 345801094,
+                "delay": 2,
+                "rank": 1
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 266600993,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 200471832,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "div_block",
+                "iterations": 1698362070,
+                "delay": 2,
+                "rank": 2
+            },
+            {
+                "type": "add_block",
+                "iterations": 24993916820,
+                "delay": 0,
+                "rank": 5
+            },
+            {
+                "type": "memory_block",
+                "iterations": 2059746598,
+                "stride": 1,
+                "delay": 1,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1786708723,
+                "stride": 2,
+                "delay": 5,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 2190925809,
+                "stride": 3,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1836958487,
+                "stride": 4,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 2474956249,
+                "stride": 5,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 2166319798,
+                "stride": 6,
+                "delay": 3,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1820181988,
+                "stride": 7,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1763511370,
+                "stride": 8,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 2432885626,
+                "stride": 9,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1549382754,
+                "stride": 10,
+                "delay": 9,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1398598881,
+                "stride": 11,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 2311970345,
+                "stride": 12,
+                "delay": 2,
+                "rank": 1
+            }
+        ],
+        [
+            {
+                "type": "sqrt_block",
+                "iterations": 205841995,
+                "delay": 2,
+                "rank": 1
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 192048797,
+                "delay": 3,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 229000390,
+                "delay": 1,
+                "rank": 3
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 241135971,
+                "delay": 1,
+                "rank": 4
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 231350166,
+                "delay": 0,
+                "rank": 4
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 230360746,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 238636643,
+                "delay": 1,
+                "rank": 4
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 208027033,
+                "delay": 2,
+                "rank": 1
+            },
+            {
+                "type": "div_block",
+                "iterations": 1117876294,
+                "delay": 3,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 648423972,
+                "stride": 1,
+                "delay": 2,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 847088525,
+                "stride": 2,
+                "delay": 1,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1047363095,
+                "stride": 3,
+                "delay": 3,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1404523543,
+                "stride": 4,
+                "delay": 2,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 825508931,
+                "stride": 5,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 930013799,
+                "stride": 6,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 917794709,
+                "stride": 7,
+                "delay": 5,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1122056658,
+                "stride": 8,
+                "delay": 4,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1115197355,
+                "stride": 9,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1373619782,
+                "stride": 10,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1536335429,
+                "stride": 11,
+                "delay": 1,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1110289084,
+                "stride": 12,
+                "delay": 0,
+                "rank": 3
+            }
+        ],
+        [
+            {
+                "type": "sqrt_block",
+                "iterations": 131552766,
+                "delay": 3,
+                "rank": 1
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 111417786,
+                "delay": 5,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 165119328,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 102413503,
+                "delay": 1,
+                "rank": 1
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 171971181,
+                "delay": 0,
+                "rank": 1
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 190444780,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 201627420,
+                "delay": 0,
+                "rank": 9
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 136852132,
+                "delay": 4,
+                "rank": 1
+            },
+            {
+                "type": "div_block",
+                "iterations": 352405142,
+                "delay": 8,
+                "rank": 1
+            },
+            {
+                "type": "add_block",
+                "iterations": 2862368696,
+                "delay": 7,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 620352660,
+                "stride": 5,
+                "delay": 5,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1083382594,
+                "stride": 6,
+                "delay": 1,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 630026076,
+                "stride": 7,
+                "delay": 3,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 916087387,
+                "stride": 8,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 687667713,
+                "stride": 9,
+                "delay": 5,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1309388078,
+                "stride": 10,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1047537827,
                 "stride": 11,
                 "delay": 0,
                 "rank": 3
             },
             {
                 "type": "memory_block",
-                "iterations": 999577077,
+                "iterations": 1209124119,
                 "stride": 12,
                 "delay": 0,
                 "rank": 3

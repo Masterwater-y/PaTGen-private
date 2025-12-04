@@ -826,7 +826,7 @@ parser.add_argument('--result_dir', type=str,  help='结果存放目录')
 parser.add_argument('--delay_iters', type=int, default=0, help='GA迭代次数')
 args = parser.parse_args()
 print(args)
-block_path = './block.csv'
+block_path = '../multi_rank_block.csv'
 block_feature, param_sets = read_load_features(block_path)
 
 sample_index = args.sample_index

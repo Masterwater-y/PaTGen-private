@@ -16,6 +16,7 @@ from workload_runner.MeowRunner import MeowRunner
 from workload_runner.CloudSuiteRunner import CloudSuiteRunner
 from workload_runner.LinearRunner import LinearRunner
 from workload_runner.PhaseRunner import PhaseRunner
+from workload_runner.BlockRunner import BlockRunner
 from workload_runner.MyRunner import MyRunner
 from collectors.center.center_api import CenterWorker
 import json
@@ -49,7 +50,7 @@ for i in range(1):
     result_dir = os.path.join(job_dir,f'iter{i}')
     perf_dir = os.path.join(result_dir, 'perf')
     time_record_dir = os.path.join(result_dir, 'time_record')
-    runner = PhaseRunner(job_dir = job_dir, sample_index=i)
+    runner = BlockRunner(job_dir = job_dir, sample_index=i)
     '''runner.FilterPefData()
     runner.Evaluate()
     runner.CalcSerialSim()'''
@@ -155,7 +156,7 @@ for i in range(1):
 
     print(f'iter{i} start alignment')
     runner.FilterPefData()
-    runner.GetChangePoint()
+    #runner.GetChangePoint()
     #runner.Evaluate()
     #runner.CalcSerialSim()
 center.stop()
