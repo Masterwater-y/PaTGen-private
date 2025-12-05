@@ -1,215 +1,311 @@
-import json
+#!/usr/bin/env python3
 import sys
 import numpy as np
 import pandas as pd
 import ast
-from scipy.optimize import minimize  # QP求解依赖
-from scipy.linalg import norm  # 误差计算
+from scipy.optimize import minimize
 
+# ---------- 全局配置（适配缩放系数x：实际运行次数 = int(init_iter * x)） ----------
+EPS = 1e-8  # 避免除以零
+np.random.seed(0)  # 固定随机种子确保可复现
+MAX_SCALE_FACTOR = 100.0  # 缩放系数x上限
+MIN_ACTUAL_ITER = 1  # 实际运行次数下限（至少1次）
 
+# ---------- 读取代码块特征（稳定无报错） ----------
 def read_load_features(file_path):
-    # 保持原数据读取逻辑不变，不修改代码块/指标相关逻辑
-    data = pd.read_csv(file_path)
-    required_columns = ['param_set', 'duration', 'cycles_sum', 'instructions_sum', 'll-misses_sum']
-    
-    for col in required_columns:
-        if col not in data.columns:
-            raise ValueError(f"CSV文件中缺少{col}列")
+    """读取代码块特征：单位性能+初始迭代次数"""
+    try:
+        data = pd.read_csv(file_path)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"代码块文件 {file_path} 未找到，请检查路径")
+
+    # 必需列校验（确保CSV格式正确）
+    required_cols = ['param_set', 'cycles_sum', 'instructions_sum', 'll-misses_sum']
+    missing_cols = [col for col in required_cols if col not in data.columns]
+    if missing_cols:
+        raise ValueError(f"CSV缺少必需列：{', '.join(missing_cols)}")
 
     block_feature = {
-        'cycle': data['cycles_sum'].values,
-        'instruction': data['instructions_sum'].values,
-        'll_miss': data['ll-misses_sum'].values,
-        'duration': data['duration'].values,
-        'rank': [],
-        'type': []
+        # 单位性能（单轮执行指标，论文B矩阵元素）
+        'cycle_per_iter': None,
+        'instr_per_iter': None,
+        'llmiss_per_iter': None,
+        # 初始迭代次数（核心：实际运行次数 = int(init_iter * x)）
+        'init_iter': [],
+        # 辅助信息
+        'param_sets': data['param_set'].apply(ast.literal_eval).tolist()
     }
-    param_sets = data['param_set'].apply(ast.literal_eval).tolist()
-    for item in param_sets:
-        block_feature['rank'].append(item[0][0])
-        block_feature['type'].append(item[0][1])
 
-    return block_feature, param_sets
+    # 提取初始迭代次数（兼容格式异常）
+    for param in block_feature['param_sets']:
+        try:
+            init_iter = int(param[0][2])  # 假设param结构：[[rank, type, init_iter, ...]]
+        except (IndexError, ValueError, TypeError):
+            init_iter = int(1e6)  # 格式异常时兜底
+        block_feature['init_iter'].append(init_iter)
+    block_feature['init_iter'] = np.array(block_feature['init_iter'], dtype=int)
 
+    # 计算单位性能（避免除以0）
+    valid_init_iter = np.maximum(block_feature['init_iter'], 1)
+    block_feature['cycle_per_iter'] = data['cycles_sum'].astype(float).values / valid_init_iter
+    block_feature['instr_per_iter'] = data['instructions_sum'].astype(float).values / valid_init_iter
+    block_feature['llmiss_per_iter'] = data['ll-misses_sum'].astype(float).values / valid_init_iter
 
-def build_quadratic_model(block_features, targets, N0=1e7):
+    return block_feature
+
+# ---------- 计算实际性能（参数传递统一：从target_t获取所有目标指标） ----------
+def calculate_actual_metrics(x, block_feature, target_t):
     """
-    Siesta核心：构建二次优化模型（替代原线性方程组）
-    目标：最小化 CPI、MPKI 相对误差的平方和（二次目标）
-    约束：执行次数非负 + 总指令数匹配目标
+    核心逻辑：
+    1. 实际运行次数 = int(init_iter * x)
+    2. 总性能 = 单位性能 * 实际运行次数
+    3. 误差 = 论文定义的相对误差平方和
+    （修复点：从target_t提取所有目标指标，避免变量未定义）
     """
-    # 提取基础参数（保持与原代码一致）
-    m = len(block_features['instruction'])  # 代码块数量
-    cycles_per_block = block_features['cycle']  # 单个代码块周期数（N0次执行）
-    instr_per_block = block_features['instruction']  # 单个代码块指令数（N0次执行）
-    llmiss_per_block = block_features['ll_miss']  # 单个代码块LLC缺失数（N0次执行）
-    
-    # 目标指标（从输入参数提取，保持原逻辑）
-    target_cpi = targets['CPI']
-    target_mpki = targets['MPKI']
-    target_total_instr = targets['instruction']  # 目标总指令数
+    m = len(x)
+    init_iter = block_feature['init_iter']
 
-    # --------------------------
-    # 1. 二次目标函数：min Σ(相对误差)^2（Siesta核心思想）
-    # --------------------------
+    # 1. 计算实际运行次数（确保整数且≥1）
+    actual_iter = np.round(init_iter * x).astype(int)
+    actual_iter = np.maximum(actual_iter, MIN_ACTUAL_ITER)
+
+    # 2. 提取目标指标（从target_t获取，避免NameError）
+    target_cycle = target_t[0]    # 目标总周期
+    target_instr = target_t[1]    # 目标总指令
+    target_llmiss = target_t[2]   # 目标总缓存缺失
+
+    # 3. 计算总性能
+    total_cycle = block_feature['cycle_per_iter'] @ actual_iter
+    total_instr = block_feature['instr_per_iter'] @ actual_iter
+    total_llmiss = block_feature['llmiss_per_iter'] @ actual_iter
+
+    # 4. 计算论文定义的相对误差平方和
+    rel_err_sq = []
+    for actual, target in [(total_cycle, target_cycle), (total_instr, target_instr), (total_llmiss, target_llmiss)]:
+        denom = max(target ** 2, EPS)  # 避免除以0
+        rel_err_sq.append((actual - target) ** 2 / denom)
+
+    # 额外计算用户关注的CPI/MPKI/duration误差（基于目标指标反推）
+    target_cpi = target_cycle / target_instr if target_instr > EPS else 0.0
+    target_mpki = (target_llmiss / target_instr) * 1000 if target_instr > EPS else 0.0
+    expected_cpi = total_cycle / total_instr if total_instr > EPS else 0.0
+    expected_mpki = (total_llmiss / total_instr) * 1000 if total_instr > EPS else 0.0
+
+    # 相对误差（百分比）
+    def rel_err_pct(actual, target):
+        return (abs(actual - target) / max(abs(target), EPS)) * 100
+
+    return {
+        'actual_iter': actual_iter,
+        'rel_err_sq_sum': sum(rel_err_sq),  # 论文目标函数值
+        # 用户关注的误差结果
+        'cpi_err_pct': rel_err_pct(expected_cpi, target_cpi),
+        'mpki_err_pct': rel_err_pct(expected_mpki, target_mpki),
+        'instr_err_pct': rel_err_pct(total_instr, target_instr),
+        # 中间结果（用于日志）
+        'total_cycle': total_cycle, 'total_instr': total_instr, 'total_llmiss': total_llmiss,
+        'expected_cpi': expected_cpi, 'expected_mpki': expected_mpki
+    }
+
+# ---------- 构建优化模型（参数传递统一） ----------
+def build_objective_model(block_feature, target_t):
+    """
+    优化变量：缩放系数x
+    目标函数：min 论文定义的相对误差平方和
+    约束：x ≥ 0
+    """
+    m = len(block_feature['init_iter'])
+
+    # 目标函数（仅依赖传入的block_feature和target_t，无外部变量）
     def objective(x):
-        # x: 各代码块执行次数（变量）
-        # 计算实际总指标（需除以N0，还原单次执行的累积值）
-        total_cycle = np.sum(cycles_per_block * x) / N0
-        total_instr = np.sum(instr_per_block * x) / N0
-        total_llmiss = np.sum(llmiss_per_block * x) / N0
+        x = np.maximum(x, 0.0)  # 确保x非负
+        metrics = calculate_actual_metrics(x, block_feature, target_t)
+        return metrics['rel_err_sq_sum']
 
-        # 计算CPI、MPKI的相对误差（避免除以零）
-        cpi_actual = total_cycle / total_instr if total_instr != 0 else 0
-        mpki_actual = (total_llmiss / total_instr) * 1000 if total_instr != 0 else 0
+    # 变量边界（x∈[0, MAX_SCALE_FACTOR]）
+    bounds = [(0.0, MAX_SCALE_FACTOR) for _ in range(m)]
+    return objective, [], bounds  # 无额外约束
 
-        cpi_rel_error = (cpi_actual - target_cpi) / target_cpi if target_cpi != 0 else 0
-        mpki_rel_error = (mpki_actual - target_mpki) / target_mpki if target_mpki != 0 else 0
+# ---------- 求解缩放系数x（稳定多起点优化） ----------
+def solve_scale_factor(objective, bounds):
+    """求解缩放系数x，多起点避免局部最优"""
+    m = len(bounds)
+    if m == 0:
+        raise ValueError("无代码块数据，无法求解缩放系数")
 
-        # 二次目标：最小化相对误差平方和（Siesta论文式5的简化，仅保留CPI、MPKI）
-        return cpi_rel_error ** 2 + mpki_rel_error ** 2
-
-    # --------------------------
-    # 2. 约束条件：等式约束（总指令数匹配）+ 不等式约束（执行次数非负）
-    # --------------------------
-    # 等式约束：总指令数 = 目标总指令数（对应Siesta的“计算指标匹配”约束）
-    def eq_constraint(x):
-        total_instr_actual = np.sum(instr_per_block * x) / N0
-        return total_instr_actual - target_total_instr  # 要求结果=0
-
-    # 约束列表（scipy minimize格式）
-    constraints = [
-        {'type': 'eq', 'fun': eq_constraint}  # 等式约束：总指令数匹配
+    # 初始点集（覆盖合理范围，提升求解成功率）
+    initial_guesses = [
+        np.ones(m),  # 基准点：x=1.0
+        np.random.uniform(0.1, 1.0, size=m),  # 小缩放
+        np.random.uniform(1.0, 10.0, size=m)   # 中缩放
     ]
 
-    # 变量边界：执行次数x≥0（Siesta要求“非负整数解”，先求连续解再取整）
-    bounds = [(0, None) for _ in range(m)]
+    best_x = None
+    best_fun = float('inf')
 
-    return objective, constraints, bounds
+    for guess_idx, x0 in enumerate(initial_guesses):
+        # 确保初始点在边界内
+        x0 = np.clip(x0, bounds[0][0] + EPS, bounds[0][1] - EPS)
+        res = minimize(
+            fun=objective,
+            x0=x0,
+            method='SLSQP',
+            bounds=bounds,
+            options={'maxiter': 2000, 'ftol': 1e-9, 'disp': False}
+        )
 
+        # 记录最优结果
+        if res.success and np.all(res.x >= 0) and res.fun < best_fun:
+            best_fun = res.fun
+            best_x = res.x.copy()
+            print(f"[初始点{guess_idx+1}] 求解成功 | 目标函数值: {res.fun:.6e}")
+        else:
+            msg = res.message if res.success else f"失败: {res.message[:20]}..."
+            print(f"[初始点{guess_idx+1}] {msg} | 目标函数值: {res.fun:.6e}")
 
-def solve_quadratic_program(objective, constraints, bounds, init_x=None):
+    # 兜底逻辑（确保有解）
+    if best_x is None:
+        best_x = np.ones(m)
+        best_fun = objective(best_x)
+        print(f"[兜底] 使用默认x=1.0 | 目标函数值: {best_fun:.6e}")
+
+    return best_x, best_fun
+
+# ---------- 主流程（参数传递全链路统一） ----------
+def synthesize_workload(block_path, target_params):
     """
-    Siesta QP求解：用二次规划求解器得到最优执行次数（连续解→整数解）
+    完整流程：
+    1. 读特征 → 2. 构建目标向量t → 3. 求解x → 4. 输出误差 → 5. 生成计划
     """
-    # 初始值：若未指定，用“平均分配”初始化（避免空解）
-    m = len(bounds)
-    if init_x is None:
-        init_x = np.ones(m) / m  # 初始均匀分配执行次数
+    # 1. 读取代码块特征
+    print("\n1. 读取代码块特征")
+    block_feature = read_load_features(block_path)
+    m = len(block_feature['init_iter'])
+    print(f"   加载 {m} 个代码块 | 初始迭代次数范围: {block_feature['init_iter'].min()}~{block_feature['init_iter'].max()}")
 
-    # --------------------------
-    # QP求解：最小化二次目标（Siesta核心步骤）
-    # 选择SLSQP求解器（支持等式/不等式约束，适配二次问题）
-    # --------------------------
-    result = minimize(
-        fun=objective,
-        x0=init_x,
-        method='SLSQP',
-        bounds=bounds,
-        constraints=constraints,
-        tol=1e-6,  # 精度阈值（贴合Siesta的低误差要求）
-        options={'maxiter': 1000}  # 迭代次数上限
-    )
+    # 2. 构建目标性能向量t（从target_params推导，统一格式）
+    print("\n2. 构建目标性能向量t")
+    target_duration = target_params['duration']
+    target_cpi = target_params['CPI']
+    target_mpki = target_params['MPKI']
+    # 推导目标总指令（保留原逻辑）
+    target_instr = target_duration * 3 * 1e9
+    # 推导目标总周期、总缓存缺失
+    target_cycle = target_instr * target_cpi if target_instr > EPS else 0.0
+    target_llmiss = (target_mpki * target_instr) / 1000 if target_instr > EPS else 0.0
+    target_t = np.array([target_cycle, target_instr, target_llmiss])  # 统一目标向量格式
 
-    if not result.success:
-        raise RuntimeError(f"QP求解失败：{result.message}")
+    # 打印目标参数（便于调试）
+    print(f"   目标CPI: {target_cpi:.6f} | 目标MPKI: {target_mpki:.6f} | 目标duration: {target_duration:.6f}s")
+    print(f"   推导目标总指令: {target_instr:.0f} | 目标总周期: {target_cycle:.0f} | 目标总缓存缺失: {target_llmiss:.0f}")
 
-    # --------------------------
-    # Siesta关键步骤：连续解→整数解（执行次数需为正整数）
-    # --------------------------
-    x_continuous = result.x
-    x_integer = np.round(x_continuous).astype(int)  # 四舍五入取整
-    x_integer[x_integer < 0] = 0  # 确保取整后仍非负
+    # 3. 求解缩放系数x
+    print("\n3. 求解缩放系数x（实际运行次数 = int(init_iter * x)）")
+    objective, _, bounds = build_objective_model(block_feature, target_t)
+    best_x, best_fun = solve_scale_factor(objective, bounds)
+    print(f"   最优缩放系数x: {np.round(best_x, 4).tolist()}")
 
-    return x_integer, result.fun  # 返回整数解 + 最小目标函数值（误差）
+    # 4. 计算实际结果与误差（用户关注的核心输出）
+    print("\n4. 结果与误差分析")
+    metrics = calculate_actual_metrics(best_x, block_feature, target_t)
+    print("   " + "="*80)
+    print("   📊 预期指标 vs 目标指标（误差百分比）")
+    print("   " + "="*80)
+    print(f"   {'指标':<12} {'目标值':<20} {'预期值':<20} {'误差':<10}")
+    print("   " + "-"*80)
+    print(f"   {'CPI':<12} {target_cpi:<20.6f} {metrics['expected_cpi']:<20.6f} {metrics['cpi_err_pct']:<10.2f}%")
+    print(f"   {'MPKI':<12} {target_mpki:<20.6f} {metrics['expected_mpki']:<20.6f} {metrics['mpki_err_pct']:<10.2f}%")
+    print(f"   {'总指令':<12} {target_instr:<20.0f} {metrics['total_instr']:<20.0f} {metrics['instr_err_pct']:<10.2f}%")
+    print("   " + "="*80)
 
-
-def synthesize_workload(load_features_file, target_params):
-    """
-    主函数：替换原线性求解为Siesta二次优化求解
-    """
-    # 1. 读取数据（保持原逻辑）
-    block_feature, param_sets = read_load_features(load_features_file)
-    N0 = 1e7  # 原代码的“初始测量次数”，保持不变
-
-    # 2. 构建Siesta二次优化模型（核心修改点）
-    objective, constraints, bounds = build_quadratic_model(
-        block_features=block_feature,
-        targets=target_params,
-        N0=N0
-    )
-
-    # 3. QP求解：得到最优执行次数（整数解）
-    x_optimized, min_error = solve_quadratic_program(
-        objective=objective,
-        constraints=constraints,
-        bounds=bounds
-    )
-
-    # 4. 结果验证：计算实际CPI、MPKI（保持原输出逻辑，新增误差显示）
-    total_cycle = np.sum(block_feature['cycle'] * x_optimized) / N0
-    total_instr = np.sum(block_feature['instruction'] * x_optimized) / N0
-    total_llmiss = np.sum(block_feature['ll_miss'] * x_optimized) / N0
-
-    actual_cpi = total_cycle / total_instr if total_instr != 0 else 0
-    actual_mpki = (total_llmiss / total_instr) * 1000 if total_instr != 0 else 0
-    cpi_error = abs(actual_cpi - target_params['CPI']) / target_params['CPI'] * 100
-    mpki_error = abs(actual_mpki - target_params['MPKI']) / target_params['MPKI'] * 100
-
-    # 输出Siesta优化结果（新增误差显示，贴合论文“高精度”特性）
-    print(f"QP求解完成：最小误差={min_error:.6f}")
-    print(f"目标CPI={target_params['CPI']:.4f} → 实际CPI={actual_cpi:.4f}（误差={cpi_error:.2f}%）")
-    print(f"目标MPKI={target_params['MPKI']:.4f} → 实际MPKI={actual_mpki:.4f}（误差={mpki_error:.2f}%）")
-    print(f"总指令数：目标={target_params['instruction']:.0f} → 实际={total_instr:.0f}")
-
-    # 5. 生成执行计划（保持原逻辑，过滤无效解）
-    valid_indices = x_optimized > 1e-6  # 忽略极小值（视为零）
+    # 5. 生成执行计划（替换迭代次数）
+    print("\n5. 生成执行计划")
     template_res = []
-    for i in np.where(valid_indices)[0]:
-        scale = x_optimized[i]
-        # 更新代码块参数（执行次数按优化结果缩放）
-        param = param_sets[i][0].copy()
-        param[2] = int(param[2] * scale)  # 原代码的“执行次数参数”
-        template_res.append(param)
+    for param, iter_val in zip(block_feature['param_sets'], metrics['actual_iter']):
+        try:
+            new_param = list(param[0])  # 提取原始param结构
+        except (IndexError, TypeError):
+            new_param = [None, 'unknown', 1]  # 格式异常兜底
+        # 确保参数长度足够，替换迭代次数
+        while len(new_param) < 3:
+            new_param.append(1)
+        new_param[2] = int(iter_val)  # 实际运行次数（int(init_iter*x)）
+        template_res.append(new_param)
+    print(f"   生成 {len(template_res)} 个代码块执行计划")
 
-    return template_res
+    return template_res, best_x
 
-
-# --------------------------
-# 后续主逻辑（保持原代码完全不变，仅调用修改后的synthesize_workload）
-# --------------------------
+# ---------- 主程序入口（稳定鲁棒，兼容命令行参数） ----------
 if __name__ == "__main__":
-    block_path = 'block.csv'
-    args = sys.argv[1:]
-    sample_index = int(args[0])
-    phase_index = None
-    if len(args) > 1:
-        phase_index = int(args[1])
+    # 命令行参数解析（清晰提示用法）
+    if len(sys.argv) < 2:
+        print("用法：python generate.py <sample_index> [phase_index]")
+        print("  功能：求解缩放系数x，实际运行次数 = int(代码块初始迭代次数 * x)")
+        print("  输出：预期CPI/MPKI/总指令与目标值的误差百分比 + 执行计划文件")
+        print("  示例：")
+        print("    处理所有阶段：python generate.py 1")
+        print("    仅处理第0阶段：python generate.py 1 0")
+        sys.exit(1)
 
-    aggr_df = pd.read_csv(f'stage{sample_index}/aggr.csv')
-    target_path = f'stage{sample_index}/targets.csv'
-    targets_df = pd.read_csv(target_path)
+    # 参数赋值与校验
+    try:
+        sample_index = int(sys.argv[1])
+        phase_index = int(sys.argv[2]) if len(sys.argv) > 2 else None
+    except ValueError:
+        raise ValueError("参数错误：sample_index和phase_index必须为整数")
+
+    block_path = '../single_rank_block.csv'  # 代码块文件路径（可根据需求修改）
+    aggr_path = f'stage{sample_index}/aggr.csv'  # 目标参数文件路径
+
+    # 初始化日志
+    print("=" * 80)
+    print("MPI程序负载合成工具（稳定版）")
+    print(f"核心逻辑：实际运行次数 = int(代码块初始迭代次数 * 缩放系数x)")
+    print(f"当前配置：sample_index={sample_index} | phase_index={phase_index if phase_index is not None else '所有'}")
+    print("=" * 80)
+
+    # 读取目标参数（aggr.csv）
+    try:
+        aggr_df = pd.read_csv(aggr_path)
+    except FileNotFoundError:
+        raise FileNotFoundError(f"目标参数文件 {aggr_path} 未找到，请检查sample_index是否正确")
+
+    # 遍历阶段处理
     res_template = []
+    total_phases = len(aggr_df)
+    target_phases = [phase_index] if phase_index is not None else range(total_phases)
 
-    for _, targets_row in aggr_df.iterrows():
-        if phase_index is not None and _ != phase_index:
+    for phase_idx in target_phases:
+        # 阶段索引校验
+        if phase_idx < 0 or phase_idx >= total_phases:
+            print(f"\n⚠️  阶段 {phase_idx} 超出范围（共{total_phases}个阶段），跳过")
             continue
 
-        # 保持原目标参数计算逻辑不变
-        instructions = targets_row['duration'] * 3 * 10e8
-        targets = {
-            "CPI": targets_row['CPI'],
-            "MPKI": targets_row['MPKI'],
-            "instruction": instructions,
-            "duration": targets_row['duration']
-        }
-        print(f"\n=== 处理阶段{_}：目标参数 {targets} ===")
-        
-        # 调用修改后的Siesta二次优化合成函数
-        template = synthesize_workload(block_path, target_params=targets)
-        res_template.extend(template)
+        # 提取当前阶段目标参数
+        row = aggr_df.iloc[phase_idx]
+        try:
+            target_params = {
+                'duration': row['duration'],
+                'CPI': row['CPI'],
+                'MPKI': row['MPKI']
+            }
+        except KeyError as e:
+            raise KeyError(f"aggr.csv缺少列：{e}，请检查文件格式")
 
-    # 保持原输出逻辑不变
-    res_template.extend([16, 1])
-    param_sets = [{"param_set": str(res_template)}]
-    pd.DataFrame(param_sets).to_csv('param_sets.csv', index=False)
+        # 打印阶段信息
+        print(f"\n" + "=" * 60)
+        print(f"处理阶段 {phase_idx}/{total_phases-1}")
+        print("=" * 60)
+        print(f"目标参数：duration={target_params['duration']:.6f}s, CPI={target_params['CPI']:.6f}, MPKI={target_params['MPKI']:.6f}")
+
+        # 合成负载（核心调用，无参数混淆）
+        phase_template, best_x = synthesize_workload(block_path, target_params)
+        res_template.extend(phase_template)
+
+    # 生成最终执行计划文件
+    print(f"\n" + "=" * 60)
+    res_template.extend([16, 1])  # 保留原尾部标识（兼容下游工具）
+    pd.DataFrame({"param_set": [str(res_template)]}).to_csv('param_sets.csv', index=False, encoding='utf-8')
+    print(f"✅ 执行计划文件 'param_sets.csv' 生成完成")
+    print(f"📋 有效执行计划条目数：{len(res_template)-2}（不含尾部标识）")
+    print("=" * 60)

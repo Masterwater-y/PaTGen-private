@@ -51,7 +51,7 @@ sys.exit()'''
     runner.GetChangePoint(sample_index=i, alg='window', args=[])
 sys.exit()'''
 generate_costs = []
-for i in range(5):
+for i in range(1):
     result_dir = os.path.join(job_dir, f'iter{i}')
     perf_dir = os.path.join(result_dir, 'perf')
     time_record_dir = os.path.join(result_dir, 'time_record')
