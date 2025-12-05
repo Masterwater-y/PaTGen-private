@@ -189,7 +189,7 @@ def synthesize_workload(block_path, target_params):
     target_cpi = target_params['CPI']
     target_mpki = target_params['MPKI']
     # 推导目标总指令（保留原逻辑）
-    target_instr = target_duration * 3 * 1e9
+    target_instr = target_duration * 2.6 * 1e9
     # 推导目标总周期、总缓存缺失
     target_cycle = target_instr * target_cpi if target_instr > EPS else 0.0
     target_llmiss = (target_mpki * target_instr) / 1000 if target_instr > EPS else 0.0
