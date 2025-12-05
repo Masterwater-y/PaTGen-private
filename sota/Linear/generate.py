@@ -147,7 +147,7 @@ if len(args)>1:
     phase_index = int(args[1])
 aggr_df = pd.read_csv(f'stage{sample_index}/aggr.csv')
 target_path = f'stage{sample_index}/targets.csv'
-#block_feature, param_sets = read_load_features(block_path)
+
 targets_df = pd.read_csv(target_path)
 param_sets = []
 res_template = []
@@ -158,7 +158,7 @@ for _, targets_row in aggr_df.iterrows():
         if _!=phase_index:
             continue
 
-    instructions = targets_row['duration']*3*10e8
+    instructions = targets_row['duration']*2.6*10e8
     targets = {
         "cycles":targets_row['CPI']*instructions,
         "ll-misses/":targets_row['MPKI']*instructions/1000,
