@@ -10,14 +10,7 @@ from configparser import ConfigParser
 from multiprocessing import Pool
 from datetime import datetime
 from align import filter_performance_data
-from memory_analysis import MPKI_analysis
-import optuna
-from workload_runner.MeowRunner import MeowRunner
-from workload_runner.CloudSuiteRunner import CloudSuiteRunner
-from workload_runner.LinearRunner import LinearRunner
-from workload_runner.PhaseRunner import PhaseRunner
 from workload_runner.BlockRunner import BlockRunner
-from workload_runner.MyRunner import MyRunner
 from collectors.center.center_api import CenterWorker
 import json
 

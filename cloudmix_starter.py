@@ -10,7 +10,6 @@ from configparser import ConfigParser
 from multiprocessing import Pool
 from datetime import datetime
 from align import filter_performance_data
-from memory_analysis import MPKI_analysis
 from workload_runner.CloudmixRunner import CloudmixRunner
 from collectors.center.center_api import CenterWorker
 import json

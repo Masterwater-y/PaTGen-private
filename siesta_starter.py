@@ -9,9 +9,6 @@ import traceback
 from configparser import ConfigParser
 from multiprocessing import Pool
 from datetime import datetime
-from align import filter_performance_data
-from memory_analysis import MPKI_analysis
-import optuna
 
 from workload_runner.SiestaRunner import SiestaRunner
 
