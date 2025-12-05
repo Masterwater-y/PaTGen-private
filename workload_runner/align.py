@@ -163,7 +163,13 @@ def filter_performance_data(result_dir):
         reader = csv.reader(f)
         next(reader)  # Skip header
         for row in reader:
-            timestamps.append( (row[0], row[1], int(row[2]), int(row[3]), int(row[4])) )
+            try:
+                start = float(row[2])
+                end = float(row[3])
+                duration = float(row[4]) if len(row) > 4 else end - start
+            except (ValueError, TypeError):
+                start = end = duration = 0.0
+            timestamps.append((row[0], row[1], start, end, duration))
 
     # 读取性能数据
     performance_df = pd.read_csv(performance_file)
@@ -395,10 +401,12 @@ def extract_final_rows(result_dir):
             reader = csv.reader(f)
             next(reader)  # 跳过表头
             for row in reader:
-                start = int(row[2])
-                end = int(row[3])
-                duration = end - start
-                durations.append(duration)
+                try:
+                    start = float(row[2])
+                    end = float(row[3])
+                except (ValueError, TypeError):
+                    start = end = 0.0
+                durations.append(end - start)
     except Exception as e:
         print(f"读取时间记录文件失败: {e}")
         return
@@ -465,16 +473,23 @@ def extract_final_rows(result_dir):
 
 def extract_aggr_values(aggr_filepath):
     """从aggr文件中提取sum行的特定列值"""
+    def _to_float(value, default=0.0):
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return default
+
     sum_values = {
         'cycles': 'N/A',
         'instructions': 'N/A',
         'L1-misses': 'N/A',
-        'll-misses/': 'N/A'
+        'll-misses/': 'N/A',
+        'power': 'N/A'
     }
     mean_values = {
-        'cpu_util_mean': 'N/A',
-        'mem_util_mean': 'N/A',
-        'disk_util_mean': 'N/A'
+        'cpu_util_mean': 0.0,
+        'mem_util_mean': 0.0,
+        'disk_util_mean': 0.0
     }
     if os.path.exists(aggr_filepath):
         try:
@@ -484,19 +499,24 @@ def extract_aggr_values(aggr_filepath):
                     aggr_type = row.get('aggr_type', '')
                     if aggr_type == 'sum':
                         # 提取性能指标
-                        sum_values['cycles'] = float(row.get('cycles', 0))
-                        sum_values['instructions'] = float(row.get('instructions', 0))
-                        sum_values['L1-misses'] = float(row.get('L1-misses', 0))
-                        sum_values['ll-misses/'] = float(row.get('ll-misses/', 0))
-                        sum_values['power'] = row.get('power', 'N/A')
+                        sum_values['cycles'] = _to_float(row.get('cycles', 0))
+                        sum_values['instructions'] = _to_float(row.get('instructions', 0))
+                        sum_values['L1-misses'] = _to_float(row.get('L1-misses', 0))
+                        sum_values['ll-misses/'] = _to_float(row.get('ll-misses/', 0))
+                        sum_values['power'] = _to_float(row.get('power', 0))
                     elif aggr_type == 'mean':
                         # 提取资源利用率
-                        mean_values['cpu_util_mean'] = row.get('cpu_util', 'N/A')
-                        mean_values['mem_util_mean'] = row.get('mem_util', 'N/A')
-                        mean_values['disk_util_mean'] = row.get('disk_util', 'N/A')
+                        mean_values['cpu_util_mean'] = _to_float(row.get('cpu_util', 0))
+                        mean_values['mem_util_mean'] = _to_float(row.get('mem_util', 0))
+                        mean_values['disk_util_mean'] = _to_float(row.get('disk_util', 0))
                         
         except Exception as e:
             print(f"处理文件 {aggr_filepath} 时出错: {e}")
+
+    instructions = sum_values['instructions']
+    cpi = sum_values['cycles'] / instructions if instructions else 0.0
+    mpki = (sum_values['ll-misses/'] * 1000) / instructions if instructions else 0.0
+
     return (
         mean_values['cpu_util_mean'],
         mean_values['mem_util_mean'],
@@ -506,8 +526,8 @@ def extract_aggr_values(aggr_filepath):
         sum_values['L1-misses'],
         sum_values['ll-misses/'],
         sum_values['power'],
-        int(sum_values['cycles'])/int(sum_values['instructions']),
-        int(sum_values['ll-misses/'])*1000/int(sum_values['instructions'])
+        cpi,
+        mpki
     )
 
 

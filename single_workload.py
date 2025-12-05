@@ -43,7 +43,7 @@ for i in range(1):
     result_dir = os.path.join(job_dir,f'iter{i}')
     perf_dir = os.path.join(result_dir, 'perf')
     time_record_dir = os.path.join(result_dir, 'time_record')
-    runner = BlockRunner(job_dir = job_dir, sample_index=i)
+    runner = BlockRunner(job_dir=job_dir, sample_index=i, normalize_block_duration=True)
     '''runner.FilterPefData()
     runner.Evaluate()
     runner.CalcSerialSim()'''

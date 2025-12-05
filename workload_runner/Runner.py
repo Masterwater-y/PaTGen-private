@@ -84,7 +84,8 @@ class Runner:
         tmp_dir = os.path.join(self.result_dir, 'tmp')
         if not os.path.exists(tmp_dir):
             os.mkdir(tmp_dir)
-        durations = phase_df['duration'].dropna().astype(int)
+        durations = phase_df['duration'].dropna().astype(float)
+        durations = durations.apply(lambda d: max(1, int(round(d))))
         metric_dir = os.path.join(self.result_dir, 'final_result')
         metric = pd.read_csv(f"{metric_dir}/metric_0.csv")
         sim_path = os.path.join(self.result_dir,'phase_sim.csv')
@@ -258,7 +259,8 @@ class Runner:
         df_aggr = pd.read_csv(os.path.join(origin_dir, 'aggr.csv'))
 
         # 提取duration列作为阶段分界线（绝对坐标）
-        durations = df_aggr['duration'].dropna().astype(int)
+        durations = df_aggr['duration'].dropna().astype(float)
+        durations = durations.apply(lambda d: max(1, int(round(d))))
         if not durations.empty:
             cumulative = durations.cumsum().values - 1  # 计算累积和并减一
             boundaries = cumulative.tolist()
@@ -282,7 +284,8 @@ class Runner:
 
             if self.phase_aware:
                 phase_df = pd.read_csv(os.path.join(self.result_dir, 'time_record','phase_time.csv'))
-                phase_durations = phase_df['duration'].dropna().astype(int)
+                phase_durations = phase_df['duration'].dropna().astype(float)
+                phase_durations = phase_durations.apply(lambda d: max(1, int(round(d))))
 
                 #print(durations,phase_durations)
                 df_processed = self.FixPhase(df_processed,durations,phase_durations)

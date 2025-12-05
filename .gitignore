@@ -7,4 +7,5 @@ workloads/backup/
 generate/*.csv
 generate/backup/
 .vscode/
-_pycache_/
+__pycache__/
+collectors/node/tools/
