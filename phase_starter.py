@@ -42,7 +42,7 @@ runner = PhaseRunner(job_dir= job_dir)
 '''runner.GetGAConvergencePoint()
 sys.exit()'''
 '''for i in range(5):
-    runner.GetChangePoint(sample_index=i, alg='window', args=[])
+    runner.GetChangePoint(sample_index=i, alg='fixed', args=[1])
 sys.exit()'''
 generate_costs = []
 for i in range(1):

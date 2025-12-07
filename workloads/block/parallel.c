@@ -16,9 +16,6 @@
 extern void add_block(long iterations);
 extern void div_block(long iterations);
 extern void sqrt_block(long iterations);
-static inline double timespec_to_seconds(const struct timespec* ts) {
-    return (double)ts->tv_sec + (double)ts->tv_nsec / 1e9;
-}
 // 加法模块：
 void ari_block(int iterations, int chain_depth) {
     uint64_t sum_parallel[4] = {0}; // 并行累加器
@@ -414,18 +411,19 @@ int main(int argc, char **argv) {
     }
     pthread_barrier_destroy(&barrier);
     if (RANK > 0) { 
-        double start_ts = timespec_to_seconds(&thread_data[0].start_time);
-        double end_ts = timespec_to_seconds(&thread_data[0].end_time);
-
         // 控制台输出
-        printf("%.9f\n", start_ts);
-        printf("%.9f\n", end_ts);
+        printf("%ld\n", 
+                thread_data[0].start_time.tv_sec);
+        printf("%ld\n",
+                thread_data[0].end_time.tv_sec);
 
         // 文件输出
         FILE *fp = fopen("execution_timing.log", "w");
         if (fp) {
-            fprintf(fp, "%.9f\n", start_ts);
-            fprintf(fp, "%.9f\n", end_ts);
+            fprintf(fp, "%ld\n", 
+                    thread_data[0].start_time.tv_sec);
+            fprintf(fp, "%ld\n",
+                    thread_data[0].end_time.tv_sec);
             fclose(fp);
         } else {
             perror("无法写入时间统计文件");
@@ -437,13 +435,11 @@ int main(int argc, char **argv) {
             fprintf(fp2, "start_time,end_time,duration\n");
             
             for (int stage = 0; stage < num_groups; stage++) {
-                double stage_start = timespec_to_seconds(&thread_data[0].stage_start[stage]);
-                double stage_end = timespec_to_seconds(&thread_data[0].stage_end[stage]);
-                double stage_duration = stage_end - stage_start;
-                fprintf(fp2, "%.9f,%.9f,%.9f\n", 
-                    stage_start,
-                    stage_end,
-                    stage_duration);
+                // 使用逗号分隔字段，并在每行末尾添加换行符
+                fprintf(fp2, "%ld,%ld,%ld\n", 
+                    thread_data[0].stage_start[stage].tv_sec, 
+                    thread_data[0].stage_end[stage].tv_sec,
+                    thread_data[0].stage_end[stage].tv_sec - thread_data[0].stage_start[stage].tv_sec);
             }
             fclose(fp2);
         }

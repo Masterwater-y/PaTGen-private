@@ -139,7 +139,10 @@ class SiestaRunner(Runner):
         else:
             return None
         
-
+    def generate_cost_report(self,cost_csv):
+        cost_df = pd.DataFrame(cost_csv)
+        cost_csv_path = os.path.join(self.job_dir, 'generate_cost.csv')
+        cost_df.to_csv(cost_csv_path, index=False)
 
     def AdjustDuration(self,param_sets,phase_index=None):
         result_path = os.path.join(self.result_dir,'final_aggregations.csv')

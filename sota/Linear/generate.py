@@ -139,7 +139,7 @@ def synthesize_workload(load_features_file, target_params):
     
     return template_res
 
-block_path = 'block.csv'
+block_path = '../single_rank_block.csv'
 args = sys.argv[1:]
 sample_index = int(args[0])
 phase_index = None

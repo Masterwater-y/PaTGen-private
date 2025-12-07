@@ -185,7 +185,8 @@ def filter_performance_data(result_dir):
         aggr_path = os.path.join(result_dir, f'final_result/aggr_{idx}.csv')
         second_path = os.path.join(result_dir, f'final_result/second_{idx}.csv')
         
-        # 筛选原始数据
+        #start = round(start)
+        #end = round(end)
         filtered = performance_df[
             (performance_df['time'] >= start) & 
             (performance_df['time'] <= end)
@@ -196,7 +197,7 @@ def filter_performance_data(result_dir):
             continue
             
         # 生成基础指标
-        metrics = get_metric_base(filtered)  # 跳过首行
+        metrics = get_metric_base(filtered)
         if metrics is None:
             continue
             

@@ -1,3 +1,4 @@
+import ast
 import os
 import csv
 import shutil
@@ -164,6 +165,7 @@ class BlockRunner(Runner):
 
     def _normalize_block_aggr(self):
         block_aggr_path = os.path.join(self.result_dir, 'block_aggr.csv')
+        block_adjust_path = os.path.join(self.result_dir, 'block_aggr_adjust.csv')
         time_record_path = os.path.join(self.time_record_dir, 'time_record.csv')
 
         if not (os.path.exists(block_aggr_path) and os.path.exists(time_record_path)):
@@ -196,7 +198,13 @@ class BlockRunner(Runner):
             actual_duration = durations.iloc[idx]
             if pd.isna(actual_duration) or actual_duration <= 0:
                 continue
-            block_df.loc[idx, metric_cols] = block_df.loc[idx, metric_cols] / actual_duration
-            block_df.loc[idx, 'duration'] = 1.0
+            rate = actual_duration/ int(actual_duration)
+            block_df.loc[idx, metric_cols] = block_df.loc[idx, metric_cols] / rate
+            param_str = block_df.loc[idx, 'param_set']
+            param_obj = ast.literal_eval(param_str)
+            param_obj[0][2] = int(param_obj[0][2] / rate )
+            block_df.loc[idx, 'param_set'] = str(param_obj)
+            block_df.loc[idx, 'duration'] = int(actual_duration)
+        block_df['duration'] = block_df['duration'].fillna(0).astype(int)
 
-        block_df.to_csv(block_aggr_path, index=False)
+        block_df.to_csv(block_adjust_path, index=False)

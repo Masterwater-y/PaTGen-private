@@ -34,13 +34,13 @@ parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
-center = start_collector(0)
+center = start_collector(40)
 current_time_str = datetime.now().strftime("%Y%m%d-%H%M%S")
-current_time_str = 'paperdata/linear-1phase'
+#current_time_str = 'paperdata/linear-1phase'
 job_dir = os.path.join('result', current_time_str)
 generate_costs = []
 for i in range(1):
-    '''result_dir = os.path.join(job_dir, f'tmp{i}')
+    result_dir = os.path.join(job_dir, f'tmp{i}')
     perf_dir = os.path.join(result_dir, 'perf')
     time_record_dir = os.path.join(result_dir, 'time_record')
     runner = LinearRunner(job_dir= job_dir, result_dir=result_dir, sample_index=i)
@@ -95,12 +95,12 @@ for i in range(1):
     generate_costs.append({
         'iteration': i,
         'generate_cost': elapsed_time
-    })'''
+    })
     result_dir = os.path.join(job_dir, f'iter{i}')
     perf_dir = os.path.join(result_dir, 'perf')
     time_record_dir = os.path.join(result_dir, 'time_record')
     runner = LinearRunner(job_dir= job_dir, result_dir=result_dir, sample_index=i)
-    '''phase_path = './workloads/linear/config_files/phase.json'
+    phase_path = './workloads/linear/config_files/phase.json'
     with open(phase_path, 'w') as f:
         json.dump(phase_sets, f, indent=4)
     for param_set in param_sets:
@@ -122,7 +122,7 @@ for i in range(1):
     except:
         print(traceback.print_exc())
         center.stop()
-        exit(0)'''
+        exit(0)
 
     print(f'iter{i} start alignment')
     runner.FilterPefData()

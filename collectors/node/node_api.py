@@ -5,6 +5,7 @@
 import os
 import pickle
 import pickletools
+import shutil
 import traceback
 import numpy as np
 import pandas as pd
@@ -18,13 +19,23 @@ class NodeWorker:
     负责启动 server 和 collector，并向 server 注册 RPC 的 handler 方法
     '''
     def __init__(self) -> None:
+        self.clean_cache()
         self.m_node_collector = NodeCollector()
         self.m_node_server = NodeServer()
         self.m_node_server.register_request_handler(self.request_handler)
 
+
     def start(self):
         self.m_node_server.start()
     
+    def clean_cache(self):
+        target_dir = os.path.join("collectors", "node", "tools", "perf", "data")
+        shutil.rmtree(target_dir)
+        os.makedirs(target_dir, exist_ok=True)
+        target_dir = os.path.join("collectors", "node", "tools", "proc_fs", "data")
+        shutil.rmtree(target_dir)
+        os.makedirs(target_dir, exist_ok=True)
+
     def request_handler(self, request, connection) -> str:
         ''' 
         处理接收到的命令
