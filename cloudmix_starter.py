@@ -36,21 +36,21 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 center = start_collector(0)
 current_time_str = datetime.now().strftime("%Y%m%d-%H%M%S")
-current_time_str = 'paperdata/cloudmix-1phase'
+#current_time_str = 'paperdata/cloudmix-1phase'
 job_dir = os.path.join(dir_path,'result', current_time_str)
 runner = CloudmixRunner(job_dir= job_dir)
 '''for i in range(5):
     runner.GetChangePoint(sample_index=i, alg='fixed', args=[1])
 sys.exit()'''
 generate_costs = []
-for i in range(5):
+for i in range(15):
     result_dir = os.path.join(job_dir, f'iter{i}')
     perf_dir = os.path.join(result_dir, 'perf')
     time_record_dir = os.path.join(result_dir, 'time_record')
     print(f'start iter{i} at {result_dir}')
     runner = CloudmixRunner(job_dir= job_dir, sample_index=i)
 
-    '''start_time = time.time()
+    start_time = time.time()
     param_sets = runner.GetParamSets()
     end_time = time.time()
     elapsed_time = end_time - start_time
@@ -77,7 +77,7 @@ for i in range(5):
     except:
         print(traceback.print_exc())
         center.stop()
-        exit(0)'''
+        exit(0)
 
     print(f'iter{i} start alignment')
     runner.FilterPefData()

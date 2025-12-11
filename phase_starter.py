@@ -36,22 +36,26 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 center = start_collector(40)
 current_time_str = datetime.now().strftime("%Y%m%d-%H%M%S")
-#current_time_str = 'paperdata/phase-withoutdelay'
+#current_time_str = '20251210-203016'
 job_dir = os.path.join(dir_path,'result', current_time_str)
 runner = PhaseRunner(job_dir= job_dir)
 '''runner.GetGAConvergencePoint()
 sys.exit()'''
-'''for i in range(5):
-    runner.GetChangePoint(sample_index=i, alg='fixed', args=[1])
-sys.exit()'''
+'''for i in range(15):
+    runner.GetChangePoint(sample_index=i, alg='pelt',args={})
+sys.exit()
+'''
+
+
 generate_costs = []
-for i in range(1):
+for i in range(15):
     result_dir = os.path.join(job_dir, f'iter{i}')
     perf_dir = os.path.join(result_dir, 'perf')
     time_record_dir = os.path.join(result_dir, 'time_record')
     print(f'start iter{i} at {result_dir}')
     runner = PhaseRunner(job_dir= job_dir, sample_index=i)
-
+    '''runner.CalcSerialSim()
+    sys.exit()'''
     start_time = time.time()
     param_sets = runner.GetParamSets()
     end_time = time.time()

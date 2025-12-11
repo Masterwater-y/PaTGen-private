@@ -5,6 +5,7 @@ import json
 
 import numpy as np
 from scipy.stats import mannwhitneyu
+from scipy.stats import variation
 from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
 def returnTime(func):
@@ -238,11 +239,11 @@ def evaluate_results(res_def, target_def):
 
 
 def stage_divide(data, alg='window',args=None,png_path = None):
+    import ruptures as rpt
     sample_phase_num = [16,8,3,4,11]
     timestamps = data['time']
-    metrics_df = data[['cpu_util', 'CPI', 'MPKI']]
-    # 数据标准化
-    metrics_df = (metrics_df - metrics_df.mean()) / metrics_df.std()
+    metrics_df = data[['CPI', 'MPKI']]
+    
     if alg == 'window':
         WINDOW_SIZE = 20  # 滑动窗口大小
         STEP = 1          # 滑动步长
@@ -251,7 +252,7 @@ def stage_divide(data, alg='window',args=None,png_path = None):
         CLUSTER_EPS = 2    # 变点合并的聚类半径
         # 读取数据
 
-        
+        metrics_df = (metrics_df - metrics_df.mean()) / metrics_df.std()
         # 检测候选变点
         candidates = []
         for start in range(0, len(metrics_df) - WINDOW_SIZE + 1, STEP):
@@ -292,6 +293,95 @@ def stage_divide(data, alg='window',args=None,png_path = None):
                 stages.append((prev, cp))
                 prev = cp
             stages.append((prev, len(metrics_df)-1))
+    elif alg == 'pelt':
+        # -----------------------------
+        # 1. 从 metrics_df 构造自定义 cost 的 feature 序列
+        # -----------------------------
+        import numpy as np
+        import pandas as pd
+        from statsmodels.tsa.stattools import acf
+        # metrics_df: shape (N, D)
+        raw = metrics_df.values
+        N, D = raw.shape
+        # 可调参数
+        window = args.get("window", min(20,N//10))      # 滑动窗口长度
+        use_adf = args.get("use_adf", False) # 是否加ADF（默认关）
+        penalty  = args.get("penalty", 3.0)  # PELT的pen
+
+
+
+        feat_list = []
+        feat_index_map = []   # 记录 feature 对应原始 index（窗口中心）
+
+        # 滑动窗口构造 local features
+        for i in range(N - window + 1):
+            w = raw[i:i+window]    # shape (window, D)
+
+            row = []
+            for d in range(D):
+                vec = w[:, d]
+                mean = np.nanmean(vec)
+                var  = np.nanvar(vec)
+                std  = np.sqrt(var) + 1e-8
+                cv   = std / (abs(mean) + 1e-8)
+
+                # acf1
+                try:
+                    acf_val = acf(vec, nlags=1, fft=False)
+                    acf1 = float(acf_val[1])
+                except:
+                    acf1 = 0.0
+
+                row.extend([mean, var, cv, acf1])
+
+            feat_list.append(row)
+            feat_index_map.append(i + window - 1)
+
+        feat = np.array(feat_list)     # shape = (N-window+1, 4D)
+        M = len(feat)
+
+        # -----------------------------
+        # 2. 在 feature 序列上运行 PELT
+        # -----------------------------
+        algo = rpt.Pelt(model='l2', min_size=max(3, window//2)).fit(feat)
+        cps_feat = algo.predict(pen=penalty)
+        cps_feat = [cp for cp in cps_feat if cp < M]  # 去掉末尾点
+
+        # 将 feature 时间轴的变点映射回原始时间轴
+        cps = [ feat_index_map[cp] for cp in cps_feat if cp < len(feat_index_map) ]
+        cps = sorted(list(set(cps)))
+
+        # -----------------------------
+        # 3. 构造 stages (与你原来一致)
+        # -----------------------------
+        print(cps)
+        stages = []
+        prev = 0
+        for cp in cps:
+            stages.append((prev, cp))
+            prev = cp
+        stages.append((prev, N - 1))
+
+        # -----------------------------
+        # 4. 画图（保持你原来风格）
+        # -----------------------------
+        if png_path is not None:
+            fig, axes = plt.subplots(metrics_df.shape[1], 1, figsize=(12, 6), sharex=True)
+            if metrics_df.shape[1] == 1:
+                axes = [axes]
+
+            for i, col in enumerate(metrics_df.columns):
+                axes[i].plot(metrics_df[col].values)
+                for cp in cps:
+                    axes[i].axvline(cp, color="r", linestyle="--")
+                axes[i].set_ylabel(col)
+
+            plt.tight_layout()
+            plt.savefig(png_path)
+
+        return stages
+
+
     elif alg == 'fixed' or alg == 'sync':
         # 读取数据和时间戳
         timestamps = data['time']

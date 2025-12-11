@@ -281,16 +281,12 @@ class Runner:
             file_id = filename.split("_")[-1].split(".")[0]
             df_origin = pd.read_csv(f"{origin_dir}/metric_{file_id}.csv")
             df_processed = pd.read_csv(f"{metric_dir}/metric_{file_id}.csv")
-
             if self.phase_aware:
                 phase_df = pd.read_csv(os.path.join(self.result_dir, 'time_record','phase_time.csv'))
                 phase_durations = phase_df['duration'].dropna().astype(float)
                 phase_durations = phase_durations.apply(lambda d: max(1, int(round(d))))
-
-                #print(durations,phase_durations)
                 df_processed = self.FixPhase(df_processed,durations,phase_durations)
-                
-            else:
+            else:   
                 # 对齐数据长度
                 min_length = min(len(df_origin), len(df_processed))
                 df_origin = df_origin.iloc[:min_length]
@@ -307,6 +303,7 @@ class Runner:
             metrics = {'sample': self.sample_index}  # 更名为metrics更贴切
             for idx, col in enumerate(COMPARE_COLS, 1):
                 # 计算MSE和Pearson
+                print('len1:',len(df_origin[col]),len(df_processed[col]))
                 mse = ((df_origin[col] - df_processed[col])**2).mean()
                 pearson, _ = pearsonr(df_origin[col], df_processed[col])
                 spearman, _ = spearmanr(df_origin[col], df_processed[col])

@@ -234,250 +234,296 @@ import numpy as np
 import random
 import json
 from typing import List, Dict, Tuple
-def optimize_block_schedule_ga(blocks: List[Dict], perf_targets: List[Dict], 
-                              population_size: int = 50, generations: int = 300,
-                              crossover_rate: float = 0.8, mutation_rate: float = 0.1) -> Dict:
+
+def optimize_block_schedule_ga(blocks: List[Dict], perf_targets: List[Dict],
+                                       population_size: int = 60, generations: int = 300,
+                                       crossover_rate: float = 0.8, init_mutation_rate: float = 0.12,
+                                       elite_k: int = 3, tournament_size: int = 3,
+                                       local_search_iters: int = 2, stagnation_patience: int = 30) -> Dict:
     """
-    使用遗传算法优化block调度
-    
-    参数:
-    blocks: 包含每个block信息的列表
-    perf_targets: 包含每个时间点性能目标的列表
-    population_size: 种群大小
-    generations: 迭代代数
-    crossover_rate: 交叉概率
-    mutation_rate: 变异概率
-    
-    返回:
-    优化结果
+    改进版遗传算法：启发式/分层初始化 + 适应度缓存 + 局部搜索（爬山） + 自适应变异 + 多精英保留
     """
-    # 参数
-    N = len(blocks)  # block数量
-    T = len(perf_targets)  # 时间点数量
-    
-    # 计算目标CPI和MPKI
-    target_CPI_t = np.array([
-        perf['cycle'] / (perf['instruction'] + 1e-10) 
-        for perf in perf_targets
-    ])
-    target_MPKI_t = np.array([
-        perf['llmiss'] * 1000 / (perf['instruction'] + 1e-10) 
-        for perf in perf_targets
-    ])
-    
-    # 生成初始种群 - 确保至少有一个块的结束时间是T-1
-    population = []
-    for _ in range(population_size):
-        individual = []
-        critical_block_assigned = False
-        
-        # 尝试为每个块分配合法的delay，同时确保至少有一个块满足约束
+    N = len(blocks)
+    T = len(perf_targets)
+
+    # 目标CPI/MPKI
+    target_CPI_t = np.array([perf['cycle'] / (perf['instruction'] + 1e-12) for perf in perf_targets])
+    target_MPKI_t = np.array([perf['llmiss'] * 1000 / (perf['instruction'] + 1e-12) for perf in perf_targets])
+
+    # 预计算每block的平均率（以便启发式）
+    block_rate_score = []
+    for b in blocks:
+        inst_rate = b['instructions'] / max(1, b['duration'])
+        cycle_rate = b['cycles'] / max(1, b['duration'])
+        llmiss_rate = b['llmiss'] / max(1, b['duration'])
+        # 简单组合评分（可依据应用调整）
+        score = cycle_rate / max(1e-6, inst_rate) + 0.1 * llmiss_rate
+        block_rate_score.append(score)
+    # index 排序（高优先级先放）
+    sorted_block_idx = sorted(range(N), key=lambda i: block_rate_score[i], reverse=True)
+
+    # ---------- 初始种群：混合策略 ----------
+    def gen_seed_greedy():
+        # 贪婪：按时间点从0..T-1放置高评分块，尝试减少当前误差
+        delays = [0]*N
+        # 先把每个block放到0
         for i in range(N):
-            duration = blocks[i]['duration']
-            max_possible_delay = T - duration
-            
-            # 如果块持续时间超过T，无法满足约束，设置为合法的最大delay
-            if max_possible_delay < 0:
-                delay = 0
+            delays[i] = 0
+        # 对高评分块尝试把它放到使得局部误差最小的位置
+        for idx in sorted_block_idx:
+            best_d = delays[idx]
+            best_fit = None
+            max_delay = max(0, T - blocks[idx]['duration'])
+            for d in range(0, max_delay+1, max(1, max(1, max_delay)//5)):  # 采样几个位置而非遍历全部以加速
+                delays[idx] = d
+                f = evaluate_fitness_cached(delays)  # 使用缓存（下面定义）
+                if best_fit is None or f > best_fit:
+                    best_fit = f
+                    best_d = d
+            delays[idx] = best_d
+        ensure_constraint(delays)
+        return delays
+
+    def gen_latin_hypercube():
+        # LHS 风格初始化：对每个 block 按其可行区间均匀采样
+        delays = []
+        for i in range(N):
+            max_d = max(0, T - blocks[i]['duration'])
+            if max_d == 0:
+                delays.append(0)
             else:
-                # 优先选择一个块作为关键块
-                if not critical_block_assigned and random.random() > 0.5:
-                    delay = max(0, T - 1 - duration)  # 确保结束时间为T-1
-                    critical_block_assigned = True
-                else:
-                    delay = random.randint(0, max_possible_delay)
-            
-            individual.append(delay)
-        
-        # 如果没有块被选为关键块，随机选择一个
-        if not critical_block_assigned and N > 0:
-            critical_block_idx = random.randint(0, N-1)
-            duration = blocks[critical_block_idx]['duration']
-            if T - 1 - duration >= 0:
-                individual[critical_block_idx] = T - 1 - duration
-        
-        population.append(individual)
-    
-    # 评估函数 - 计算适应度（目标函数的负值，因为我们要最小化目标）
+                # 在 [0, max_d] 中做 stratified sample
+                k = random.randint(0, max_d)
+                delays.append(k)
+        ensure_constraint(delays)
+        return delays
+
+    def gen_random():
+        delays = []
+        for i in range(N):
+            max_d = max(0, T - blocks[i]['duration'])
+            delays.append(random.randint(0, max_d) if max_d>0 else 0)
+        ensure_constraint(delays)
+        return delays
+
+    # ---------- 适应度缓存 ----------
+    fitness_cache = {}
+    def individual_key(ind):
+        return tuple(int(x) for x in ind)
+
+    def evaluate_fitness_cached(individual: List[int]) -> float:
+        k = individual_key(individual)
+        if k in fitness_cache:
+            return fitness_cache[k]
+        val = evaluate_fitness(individual)
+        fitness_cache[k] = val
+        return val
+
+    # ---------- 评估函数（保持你原先的定义，但用在缓存包装内） ----------
     def evaluate_fitness(individual: List[int]) -> float:
-        # 初始化性能指标数组
         cycle_t = np.zeros(T)
         instruction_t = np.zeros(T)
         llmiss_t = np.zeros(T)
-        
-        # 计算每个时间点的聚合指标
         for i in range(N):
-            start = individual[i]
+            start = int(individual[i])
             end = min(start + blocks[i]['duration'], T)
             if start < end:
-                active_mask = np.zeros(T, dtype=bool)
-                active_mask[start:end] = True
-                cycle_t[active_mask] += (blocks[i]['cycles']/blocks[i]['duration'])
-                instruction_t[active_mask] += (blocks[i]['instructions']/blocks[i]['duration'])
-                llmiss_t[active_mask] += (blocks[i]['llmiss']/blocks[i]['duration'])
-        
-        # 计算CPI和MPKI
-        epsilon = 1e-10
-        CPI_t = cycle_t / (instruction_t + epsilon)
-        MPKI_t = llmiss_t * 1000 / (instruction_t + epsilon)
-        
-        # 计算相对误差平方和
-        cpi_error = np.sum(((CPI_t - target_CPI_t) / (target_CPI_t + epsilon))**2)
-        mpki_error = np.sum(((MPKI_t - target_MPKI_t) / (target_MPKI_t + epsilon))**2)
-        
-        # 返回适应度（误差的负值，因为我们要最大化适应度）
+                duration = blocks[i]['duration']
+                cycle_t[start:end] += (blocks[i]['cycles'] / duration)
+                instruction_t[start:end] += (blocks[i]['instructions'] / duration)
+                llmiss_t[start:end] += (blocks[i]['llmiss'] / duration)
+        eps = 1e-12
+        CPI_t = cycle_t / (instruction_t + eps)
+        MPKI_t = llmiss_t * 1000 / (instruction_t + eps)
+        cpi_error = np.sum(((CPI_t - target_CPI_t) / (target_CPI_t + eps))**2)
+        mpki_error = np.sum(((MPKI_t - target_MPKI_t) / (target_MPKI_t + eps))**2)
         return - (cpi_error + mpki_error)
-    
-    # 选择操作 - 锦标赛选择
-    def tournament_selection(population: List[List[int]], tournament_size: int = 3) -> List[int]:
-        # 随机选择几个个体进行比赛
-        tournament = random.sample(population, tournament_size)
-        # 选择适应度最高的个体
-        best_individual = max(tournament, key=lambda ind: evaluate_fitness(ind))
-        return best_individual
-    
-    # 交叉操作 - 两点交叉
+
+    # ---------- 约束修复：优先选择对适应度影响小的改动 ----------
+    def ensure_constraint(individual: List[int]) -> None:
+        # 如果已有满足则直接返回
+        if any(individual[i] + blocks[i]['duration'] == T for i in range(N)):
+            return
+        # 找出可行块（duration <= T）
+        poss = [i for i in range(N) if blocks[i]['duration'] <= T]
+        if not poss:
+            # 无可行块：将某个（0..N-1）设为最大可能
+            if N>0:
+                idx = random.randrange(N)
+                individual[idx] = max(0, T - blocks[idx]['duration'])
+            return
+        # 从可行块中选择一个，使得把它设置为结束T-1对适应度代价最小
+        best_idx = None
+        best_loss = None
+        for i in poss:
+            old = individual[i]
+            candidate = max(0, T - 1 - blocks[i]['duration'])
+            individual[i] = candidate
+            loss = - evaluate_fitness_cached(individual)  # 目标为负误差
+            # 恢复
+            individual[i] = old
+            if best_loss is None or loss < best_loss:
+                best_loss = loss
+                best_idx = i
+        if best_idx is not None:
+            individual[best_idx] = max(0, T - 1 - blocks[best_idx]['duration'])
+
+    # ---------- 局部搜索（微爬山）：对个体做有限步的 +-1 调整 ----------
+    def local_search(individual: List[int], iters: int = 2):
+        improved = True
+        it = 0
+        base_fit = evaluate_fitness_cached(individual)
+        while it < iters and improved:
+            improved = False
+            it += 1
+            for i in range(N):
+                dur = blocks[i]['duration']
+                max_d = max(0, T - dur)
+                cur = individual[i]
+                # try neighbors -1, +1
+                for cand in (cur-1, cur+1):
+                    if cand < 0 or cand > max_d:
+                        continue
+                    individual[i] = cand
+                    f = evaluate_fitness_cached(individual)
+                    if f > base_fit + 1e-12:
+                        base_fit = f
+                        improved = True
+                        break  # accept first improving move
+                    else:
+                        individual[i] = cur
+                if improved:
+                    break
+        ensure_constraint(individual)
+        return individual
+
+    # ---------- 交叉与变异 ----------
     def crossover(parent1: List[int], parent2: List[int]) -> Tuple[List[int], List[int]]:
-        if random.random() > crossover_rate:
+        if N < 2 or random.random() > crossover_rate:
             return parent1.copy(), parent2.copy()
-        
-        # 修正的交叉点选择逻辑
-        if N >= 2:
-            if N == 2:
-                # 当N=2时，只有一个可能的交叉点
-                c1 = 1
-                c2 = 1
-            else:
-                # 当N>2时，随机选择两个不同的交叉点
-                cross_points = sorted(random.sample(range(1, N), min(2, N-1)))
-                c1, c2 = cross_points
-        else:
-            # 当N<2时，无法进行交叉，直接返回父代副本
-            return parent1.copy(), parent2.copy()
-        
-        # 执行交叉
+        # 使用两点交叉（和你原来类似）
+        cpoints = sorted(random.sample(range(1, N), min(2, N-1)))
+        c1, c2 = cpoints if len(cpoints) == 2 else (cpoints[0], cpoints[0])
         child1 = parent1[:c1] + parent2[c1:c2] + parent1[c2:]
         child2 = parent2[:c1] + parent1[c1:c2] + parent2[c2:]
-        
-        # 确保子代合法
+        # 修复越界
         for i in range(N):
-            child1[i] = max(0, min(child1[i], T - blocks[i]['duration']))
-            child2[i] = max(0, min(child2[i], T - blocks[i]['duration']))
-        
-        # 确保至少有一个块的结束时间是T-1
+            max_d = max(0, T - blocks[i]['duration'])
+            child1[i] = max(0, min(child1[i], max_d))
+            child2[i] = max(0, min(child2[i], max_d))
         ensure_constraint(child1)
         ensure_constraint(child2)
-        
         return child1, child2
-    
-    # 变异操作 - 随机重置变异
-    def mutate(individual: List[int]) -> List[int]:
+
+    def mutate(individual: List[int], mutation_rate: float) -> List[int]:
         for i in range(N):
             if random.random() < mutation_rate:
-                duration = blocks[i]['duration']
-                max_possible_delay = T - duration
-                if max_possible_delay >= 0:
-                    individual[i] = random.randint(0, max_possible_delay)
-        
-        # 确保至少有一个块的结束时间是T-1
+                max_d = max(0, T - blocks[i]['duration'])
+                individual[i] = random.randint(0, max_d) if max_d>0 else 0
         ensure_constraint(individual)
-        
         return individual
-    
-    # 确保约束条件：至少有一个块的结束时间是T-1
-    def ensure_constraint(individual: List[int]) -> None:
-        # 检查是否已经满足约束条件
-        has_constraint = any(
-            individual[i] + blocks[i]['duration'] == T for i in range(N)
-        )
-        
-        if not has_constraint:
-            # 尝试找到一个可以满足约束的块
-            possible_blocks = [i for i in range(N) if blocks[i]['duration'] <= T]
-            
-            if possible_blocks:
-                # 从可能的块中随机选择一个
-                critical_block_idx = random.choice(possible_blocks)
-                individual[critical_block_idx] = T - 1 - blocks[critical_block_idx]['duration']
-            else:
-                # 如果没有块可以满足约束，随机选择一个块并设置为最大可能的delay
-                if N > 0:
-                    idx = random.randint(0, N-1)
-                    individual[idx] = max(0, T - blocks[idx]['duration'])
-    
-    # 主循环
+
+    # ---------- 种群初始化混合（随机 + LHS + 贪婪） ----------
+    population = []
+    # 半随机/分层
+    num_greedy = max(2, population_size // 8)
+    num_lhs = max(4, population_size // 4)
+    num_random = population_size - num_greedy - num_lhs
+    # 先清空缓存（确保 evaluate_fitness_cached 可用）
+    fitness_cache.clear()
+    for _ in range(num_greedy):
+        population.append(gen_seed_greedy())
+    for _ in range(num_lhs):
+        population.append(gen_latin_hypercube())
+    for _ in range(num_random):
+        population.append(gen_random())
+
+    # ---------- 主循环（带自适应变异和早停） ----------
     best_fitness = float('-inf')
     best_individual = None
     fitness_history = []
-    avg_fitness_history = []
-    std_fitness_history = []
-    for generation in range(generations):
-        # 评估当前种群
-        fitness_values = [evaluate_fitness(ind) for ind in population]
-        current_best_fitness = max(fitness_values)
-        current_best_index = fitness_values.index(current_best_fitness)
-        current_best_individual = population[current_best_index]
-        # 计算平均适应度和标准差
-        avg_fitness = np.mean(fitness_values)
-        std_fitness = np.std(fitness_values)
-        # 记录最佳解
-        if current_best_fitness > best_fitness:
-            best_fitness = current_best_fitness
-            best_individual = current_best_individual
-        
-        fitness_history.append(-best_fitness)  # 转换回目标函数值
-        avg_fitness_history.append(-avg_fitness)
-        std_fitness_history.append(std_fitness)
-        # 打印进度
-        if generation % 10 == 0:
-            pass
-            #print(f"Generation {generation}: Best objective = {-best_fitness:.4f}")
-        
-        # 精英保留
-        new_population = [best_individual.copy()]
-        
-        # 生成新种群
-        while len(new_population) < population_size:
-            # 选择父代
-            parent1 = tournament_selection(population)
-            parent2 = tournament_selection(population)
-            
-            # 交叉
-            child1, child2 = crossover(parent1, parent2)
-            
-            # 变异
-            child1 = mutate(child1)
-            child2 = mutate(child2)
-            
-            # 添加到新种群
-            new_population.append(child1)
-            if len(new_population) < population_size:
-                new_population.append(child2)
-        
-        # 替换旧种群
-        population = new_population
-    
-    # 计算最终性能指标
+    avg_history = []
+    std_history = []
+    stagnation_counter = 0
+    mutation_rate = init_mutation_rate
+
+    for gen in range(generations):
+        # 评估种群（使用缓存）
+        fitness_vals = [evaluate_fitness_cached(ind) for ind in population]
+        # 记录统计
+        idx_best = int(np.argmax(fitness_vals))
+        gen_best_f = fitness_vals[idx_best]
+        gen_best_ind = population[idx_best].copy()
+        if gen_best_f > best_fitness + 1e-12:
+            best_fitness = gen_best_f
+            best_individual = gen_best_ind.copy()
+            stagnation_counter = 0
+        else:
+            stagnation_counter += 1
+
+        fitness_history.append(-best_fitness)
+        avg_history.append(-np.mean(fitness_vals))
+        std_history.append(np.std(fitness_vals))
+
+        # 自适应变异：若停滞则增加变异，若持续改进则微降
+        if stagnation_counter > 0 and stagnation_counter % (max(1, stagnation_patience//3)) == 0:
+            mutation_rate = min(0.5, mutation_rate * 1.5)
+        else:
+            mutation_rate = max(0.02, mutation_rate * 0.995)
+
+        # 精英保留 top K
+        ranked_idx = sorted(range(len(population)), key=lambda i: fitness_vals[i], reverse=True)
+        elites = [population[i].copy() for i in ranked_idx[:elite_k]]
+
+        # 新种群
+        new_pop = elites.copy()
+
+        # steady-state filling with selection + crossover + mutation + local search
+        while len(new_pop) < population_size:
+            # tournament selection
+            def tournament():
+                contestants = random.sample(population, min(tournament_size, len(population)))
+                return max(contestants, key=lambda ind: evaluate_fitness_cached(ind))
+            p1 = tournament().copy()
+            p2 = tournament().copy()
+            c1, c2 = crossover(p1, p2)
+            c1 = mutate(c1, mutation_rate)
+            c2 = mutate(c2, mutation_rate)
+            # 局部搜索（短）：对孩子做微爬山
+            c1 = local_search(c1, iters=local_search_iters)
+            c2 = local_search(c2, iters=local_search_iters)
+            new_pop.append(c1)
+            if len(new_pop) < population_size:
+                new_pop.append(c2)
+
+        # 多样性注入：若种群方差太小，则替换一部分为随机个体
+        pop_fits = [evaluate_fitness_cached(ind) for ind in new_pop]
+        if np.std(pop_fits) < 1e-6:
+            # TODO: 更复杂的策略可根据需要实现
+            for _ in range(max(1, population_size//10)):
+                new_pop[random.randrange(len(new_pop))] = gen_random()
+
+        population = new_pop
+
+        # 早停（可选）：若长期停滞
+        if stagnation_counter > stagnation_patience:
+            # print(f"Stopping early at gen {gen} due to stagnation.")
+            break
+
+    # 计算最终指标
     delays = best_individual
-    cycle_t = np.zeros(T)
-    instruction_t = np.zeros(T)
-    llmiss_t = np.zeros(T)
-    
+    cycle_t = np.zeros(T); instruction_t = np.zeros(T); llmiss_t = np.zeros(T)
     for i in range(N):
-        start = delays[i]
-        end = min(start + blocks[i]['duration'], T)
+        start = int(delays[i]); end = min(start + blocks[i]['duration'], T)
         if start < end:
-            active_mask = np.zeros(T, dtype=bool)
-            active_mask[start:end] = True
-            cycle_t[active_mask] += (blocks[i]['cycles']/blocks[i]['duration'])
-            instruction_t[active_mask] += (blocks[i]['instructions']/blocks[i]['duration'])
-            llmiss_t[active_mask] += (blocks[i]['llmiss']/blocks[i]['duration'])
-    
-    epsilon = 1e-10
-    CPI_t = cycle_t / (instruction_t + epsilon)
-    MPKI_t = llmiss_t * 1000 / (instruction_t + epsilon)
-    
-    # 整理结果
+            dur = blocks[i]['duration']
+            cycle_t[start:end] += (blocks[i]['cycles'] / dur)
+            instruction_t[start:end] += (blocks[i]['instructions'] / dur)
+            llmiss_t[start:end] += (blocks[i]['llmiss'] / dur)
+    eps = 1e-12
+    CPI_t = cycle_t / (instruction_t + eps)
+    MPKI_t = llmiss_t * 1000 / (instruction_t + eps)
+
     result = {
         'success': True,
         'objective_value': -best_fitness,
@@ -488,13 +534,17 @@ def optimize_block_schedule_ga(blocks: List[Dict], perf_targets: List[Dict],
         'target_MPKI': target_MPKI_t,
         'fitness_history': fitness_history,
         'convergence_data': {
-            'generations': list(range(generations)),
+            'generations': list(range(len(fitness_history))),
             'best_objective': fitness_history,
-            'avg_objective': avg_fitness_history,
-            'std_fitness': std_fitness_history
+            'avg_objective': avg_history,
+            'std_fitness': std_history
+        },
+        'meta': {
+            'final_generation': len(fitness_history)-1,
+            'stagnation_counter': stagnation_counter,
+            'mutation_rate': mutation_rate
         }
     }
-    
     return result
 
 def visualize_convergence(result: Dict, output_file: str = None, show_plot: bool = True):

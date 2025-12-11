@@ -4,6 +4,7 @@
 result/
 *.png
 workloads/backup/
+workloads/benchbase/
 generate/*.csv
 generate/backup/
 .vscode/

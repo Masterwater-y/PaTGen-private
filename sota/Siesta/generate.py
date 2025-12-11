@@ -238,7 +238,7 @@ if __name__ == "__main__":
                                                      weight_cycles=1.0,
                                                      weight_instr=1.0,
                                                      weight_ll=1.0,
-                                                     lambda_reg=0.5,
+                                                     lambda_reg=0.25,
                                                      reg_k=8.0)
         res_template_all += template_res
         opt_infos.append(opt_info)

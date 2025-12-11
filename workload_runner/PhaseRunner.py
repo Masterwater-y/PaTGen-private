@@ -296,6 +296,9 @@ class PhaseRunner(Runner):
         if os.path.exists(sub_path):
             shutil.rmtree(sub_path)  # 删除现有目录
         os.makedirs(sub_path)  # 创建空目录
+        COMPARE_COLS = ['CPI', 'MPKI']
+        for col in COMPARE_COLS:
+            data[col] = smooth_isolated_outliers(data[col])
         # 参数配置
         stages = stage_divide(data,alg,args,png_path)
         # 输出结果

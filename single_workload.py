@@ -9,7 +9,10 @@ import traceback
 from configparser import ConfigParser
 from multiprocessing import Pool
 from datetime import datetime
-from align import filter_performance_data
+
+from workload_runner.BenchBaseRunner import BenchBaseRunner
+from workload_runner.HiBenchRunner import HiBenchRunner
+
 from workload_runner.BlockRunner import BlockRunner
 from collectors.center.center_api import CenterWorker
 import json
@@ -37,6 +40,8 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 center = start_collector(40)
 current_time_str = datetime.now().strftime("%Y%m%d-%H%M%S")
 job_dir = os.path.join('result', current_time_str)
+stage_map=['in-memory','webserach','pr','cc','tc','tpcc','tpch','twitter','ycsb','join','kmeans','terasort','vote','wordcount','xgboost']
+
 for i in range(1):
     all_time_info = []
 
@@ -46,7 +51,8 @@ for i in range(1):
     perf_dir = os.path.join(result_dir, 'perf')
     time_record_dir = os.path.join(result_dir, 'time_record')
     #runner = BlockRunner(job_dir=job_dir, sample_index=i, normalize_block_duration=True)
-    runner = LinearRunner(job_dir=job_dir, result_dir= result_dir,sample_index=i)
+    #runner = LinearRunner(job_dir=job_dir, result_dir= result_dir,sample_index=i)
+    runner = HiBenchRunner(job_dir=job_dir, sample_index=i)
     '''runner.FilterPefData()
     runner.Evaluate()
     runner.CalcSerialSim()'''
@@ -57,9 +63,10 @@ for i in range(1):
     param_sets=[
         #['web-search',1000,200]
         #['graph','pr']
+        ['xgboost']
     ]
 
-    ranks = [1,2,4,8,12,16,24]
+    '''ranks = [1,2,4,8,12,16,24]
     stride = [i+1 for i in range(12)]
     mem = [16]
 
@@ -73,7 +80,7 @@ for i in range(1):
             tmp.append([[i0,'mem',10000000000,i1], 16, 1])
 
     param_sets = tmp
-    param_sets = [[[1, 'sqrt', 1200000000], 16, 1]]
+    param_sets = [[[1, 'sqrt', 1200000000], 16, 1]]'''
 
     for param_set in param_sets:
         print(f'param_set={param_set}')
@@ -98,7 +105,7 @@ for i in range(1):
 
     print(f'iter{i} start alignment')
     runner.FilterPefData()
-    #runner.GetChangePoint()
+    runner.GetChangePoint()
     #runner.Evaluate()
     #runner.CalcSerialSim()
 center.stop()

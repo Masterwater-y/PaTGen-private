@@ -257,7 +257,7 @@ for _, targets_row in aggr_df.iterrows():
     script = analyzer.generate_script(C_CPU=C_CPU, targets=targets)
 
     template = analyzer.generate_template(script, duration = targets_row['duration'])
-    res_template .append(template)
+    res_template.append(template)
 
 
 res_template.append(16)
