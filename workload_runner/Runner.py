@@ -113,6 +113,9 @@ class Runner:
                 'duration': len(phase_data),
                 'CPI': phase_data['cycles'].sum() / phase_data['instructions'].sum(),
                 'MPKI': phase_data['ll-misses/'].sum() / phase_data['instructions'].sum() * 1000,
+                'cycles':phase_data['cycles'].sum(),
+                'instructions':phase_data['instructions'].sum(),
+                'll-misses':phase_data['ll-misses/'].sum(),
                 'power': phase_data['power'].sum()
             }
             phase_results.append(phase_stats)
@@ -292,9 +295,20 @@ class Runner:
                 df_origin = df_origin.iloc[:min_length]
                 df_processed = df_processed.iloc[:min_length]
 
-            for col in COMPARE_COLS:
-                df_origin[col] = smooth_isolated_outliers(df_origin[col])
-                df_processed[col] = smooth_isolated_outliers(df_processed[col])
+            df_origin = smooth_isolated_outliers(
+                df_origin,
+                target_cols=COMPARE_COLS,
+                factor=6,
+                force_clip=True
+            )
+            df_origin.to_csv(f"{metric_dir}/origin_{file_id}.csv",index=False)
+
+            df_processed = smooth_isolated_outliers(
+                df_processed,
+                target_cols=COMPARE_COLS,
+                factor=6,
+                force_clip=True
+            )
             df_processed.to_csv(f"{metric_dir}/phase_adjust_{file_id}.csv",index=False)
             # 创建可视化画布
             plt.figure(figsize=(12, 6 * PLOT_ROWS))

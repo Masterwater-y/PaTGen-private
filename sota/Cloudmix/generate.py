@@ -216,7 +216,7 @@ class RWBAnalyzer:
             res.append(temp)
         return res
 
-block_path = '../single_rank_block.csv'
+block_path = '../multi_rank_block.csv'
 args = sys.argv[1:]
 sample_index = int(args[0])
 phase_index = None

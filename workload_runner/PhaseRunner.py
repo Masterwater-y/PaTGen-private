@@ -2,7 +2,7 @@ import os
 import csv
 import shutil
 from workload_runner.Runner import Runner
-from workload_runner.common import returnTime, run_command, save_json, smooth_isolated_outliers, stage_divide
+from workload_runner.common import calc_target, returnTime, run_command, save_json, smooth_isolated_outliers, stage_divide
 import pandas as pd
 
 class PhaseRunner(Runner):
@@ -40,7 +40,8 @@ class PhaseRunner(Runner):
 
     def GetParamSets(self):
         # 打开 CSV 文件
-        command = f'cd {os.getcwd()}/{self.input_dir}; python3 generate.py --result_dir {self.result_dir} --sample_index {self.sample_index} --delay_iters 50'
+        command = f'cd {os.getcwd()}/{self.input_dir}; python3 generate.py --result_dir {self.result_dir} --sample_index {self.sample_index} --delay_iters 50 >generate.log'
+        #command = f'cd {os.getcwd()}/{self.input_dir}; python3 generate.py --result_dir {self.result_dir} --sample_index {self.sample_index} >generate.log'
         run_command(command)
         param_path = os.path.join(self.input_dir, 'param_sets.csv')
         with open(param_path, 'r') as file:
@@ -292,14 +293,22 @@ class PhaseRunner(Runner):
         png_path =  os.path.join(stage_dir,'stage.png')
         metric_path = os.path.join(stage_dir,'metric_0.csv')
         sub_path = os.path.join(stage_dir,'sub')
+        target_path = os.path.join(stage_dir,'targets.csv')
         data = pd.read_csv(metric_path) 
         if os.path.exists(sub_path):
             shutil.rmtree(sub_path)  # 删除现有目录
         os.makedirs(sub_path)  # 创建空目录
         COMPARE_COLS = ['CPI', 'MPKI']
-        for col in COMPARE_COLS:
-            data[col] = smooth_isolated_outliers(data[col])
-        # 参数配置
+        data = smooth_isolated_outliers(
+            data,
+            target_cols=COMPARE_COLS,
+            factor=6,
+            force_clip=True
+        )
+
+        target_df = calc_target(data)
+        target_df.to_csv(target_path)
+
         stages = stage_divide(data,alg,args,png_path)
         # 输出结果
         print("负载阶段划分：")

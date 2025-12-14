@@ -7,118 +7,269 @@
         [
             {
                 "type": "sqrt_block",
-                "iterations": 544699290,
-                "delay": 1,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 494166452,
-                "delay": 1,
+                "iterations": 834009404,
+                "delay": 6,
                 "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 482318873,
-                "delay": 5,
-                "rank": 3
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 394978075,
-                "delay": 9,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 293242751,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 56231172,
-                "delay": 25,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 251577669,
-                "delay": 16,
-                "rank": 1
             },
             {
                 "type": "div_block",
-                "iterations": 2524825079,
-                "delay": 0,
+                "iterations": 5654499872,
+                "delay": 4,
                 "rank": 2
             },
             {
                 "type": "add_block",
-                "iterations": 28382924003,
-                "delay": 1,
-                "rank": 5
+                "iterations": 36613360785,
+                "delay": 12,
+                "rank": 3
             },
             {
                 "type": "memory_block",
-                "iterations": 3064032636,
+                "iterations": 5278211582,
                 "stride": 1,
                 "delay": 0,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 2439829494,
-                "stride": 2,
-                "delay": 1,
-                "rank": 3
-            },
-            {
-                "type": "memory_block",
-                "iterations": 2827380413,
-                "stride": 3,
-                "delay": 1,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 3236889721,
+                "iterations": 4278745969,
+                "stride": 2,
+                "delay": 13,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 3441200410,
+                "stride": 3,
+                "delay": 7,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 6177947335,
+                "stride": 4,
+                "delay": 3,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 4534749727,
+                "stride": 5,
+                "delay": 10,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 3100934555,
+                "stride": 6,
+                "delay": 25,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 2186458182,
+                "stride": 7,
+                "delay": 19,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1356344777,
+                "stride": 8,
+                "delay": 24,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 585926977,
+                "stride": 9,
+                "delay": 10,
+                "rank": 1
+            }
+        ],
+        [
+            {
+                "type": "sqrt_block",
+                "iterations": 1343161208,
+                "delay": 5,
+                "rank": 4
+            },
+            {
+                "type": "div_block",
+                "iterations": 9338447251,
+                "delay": 4,
+                "rank": 4
+            },
+            {
+                "type": "add_block",
+                "iterations": 66257481235,
+                "delay": 12,
+                "rank": 6
+            },
+            {
+                "type": "memory_block",
+                "iterations": 9185007445,
+                "stride": 1,
+                "delay": 0,
+                "rank": 4
+            },
+            {
+                "type": "memory_block",
+                "iterations": 7499791981,
+                "stride": 2,
+                "delay": 0,
+                "rank": 4
+            },
+            {
+                "type": "memory_block",
+                "iterations": 8082533027,
+                "stride": 3,
+                "delay": 3,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 7640302077,
+                "stride": 4,
+                "delay": 20,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 8655624548,
+                "stride": 5,
+                "delay": 12,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 5891733146,
+                "stride": 6,
+                "delay": 20,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 6999720603,
+                "stride": 7,
+                "delay": 23,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 2553536317,
+                "stride": 8,
+                "delay": 18,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 4753370190,
+                "stride": 10,
+                "delay": 0,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 522903688,
+                "stride": 11,
+                "delay": 24,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 803061432,
+                "stride": 12,
+                "delay": 18,
+                "rank": 1
+            }
+        ],
+        [
+            {
+                "type": "sqrt_block",
+                "iterations": 617946499,
+                "delay": 15,
+                "rank": 3
+            },
+            {
+                "type": "div_block",
+                "iterations": 4318277240,
+                "delay": 0,
+                "rank": 3
+            },
+            {
+                "type": "add_block",
+                "iterations": 35983853473,
+                "delay": 4,
+                "rank": 4
+            },
+            {
+                "type": "memory_block",
+                "iterations": 4394780517,
+                "stride": 1,
+                "delay": 8,
+                "rank": 3
+            },
+            {
+                "type": "memory_block",
+                "iterations": 5426505074,
+                "stride": 2,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 4426057962,
+                "stride": 3,
+                "delay": 7,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 4335684120,
                 "stride": 4,
                 "delay": 0,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 2591310357,
+                "iterations": 3411248836,
                 "stride": 5,
-                "delay": 10,
+                "delay": 3,
                 "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 1976879435,
+                "iterations": 4985441715,
                 "stride": 6,
                 "delay": 0,
-                "rank": 2
+                "rank": 1
             },
             {
                 "type": "memory_block",
-                "iterations": 2737634004,
+                "iterations": 3379191377,
                 "stride": 7,
-                "delay": 8,
+                "delay": 4,
                 "rank": 1
             },
             {
                 "type": "memory_block",
-                "iterations": 1640019889,
+                "iterations": 1866658145,
                 "stride": 8,
-                "delay": 2,
+                "delay": 17,
                 "rank": 1
             },
             {
                 "type": "memory_block",
-                "iterations": 773778436,
+                "iterations": 483479779,
                 "stride": 9,
+                "delay": 30,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1015179368,
+                "stride": 10,
                 "delay": 23,
                 "rank": 1
             }
@@ -126,221 +277,90 @@
         [
             {
                 "type": "sqrt_block",
-                "iterations": 61183629,
-                "delay": 1,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 81543170,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 61984154,
-                "delay": 2,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 76531660,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 59286257,
-                "delay": 2,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 56400513,
-                "delay": 2,
-                "rank": 1
-            },
-            {
-                "type": "div_block",
-                "iterations": 465994363,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "add_block",
-                "iterations": 4353467118,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 648233288,
-                "stride": 1,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 525541328,
-                "stride": 2,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 425013223,
-                "stride": 3,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 512055751,
-                "stride": 4,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 450106858,
-                "stride": 5,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 395698090,
-                "stride": 6,
-                "delay": 3,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 333428784,
-                "stride": 7,
-                "delay": 1,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 281299871,
-                "stride": 8,
-                "delay": 2,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 246192342,
-                "stride": 9,
-                "delay": 2,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 210658959,
-                "stride": 10,
-                "delay": 1,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 144369258,
-                "stride": 11,
-                "delay": 3,
-                "rank": 1
-            }
-        ],
-        [
-            {
-                "type": "sqrt_block",
-                "iterations": 163826084,
-                "delay": 3,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 212144715,
-                "delay": 1,
-                "rank": 1
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 174191603,
-                "delay": 3,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 170579112,
+                "iterations": 357212894,
                 "delay": 1,
                 "rank": 2
             },
             {
                 "type": "div_block",
-                "iterations": 1423761371,
-                "delay": 0,
-                "rank": 1
+                "iterations": 2280964775,
+                "delay": 1,
+                "rank": 2
             },
             {
                 "type": "add_block",
-                "iterations": 9014018026,
-                "delay": 3,
-                "rank": 4
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1105486460,
-                "stride": 1,
-                "delay": 3,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 821628572,
-                "stride": 2,
-                "delay": 5,
-                "rank": 2
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1233607469,
-                "stride": 3,
-                "delay": 1,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1380286508,
-                "stride": 4,
-                "delay": 0,
-                "rank": 1
-            },
-            {
-                "type": "memory_block",
-                "iterations": 1049728921,
-                "stride": 5,
+                "iterations": 14990920666,
                 "delay": 2,
-                "rank": 1
+                "rank": 2
             },
             {
                 "type": "memory_block",
-                "iterations": 729976183,
-                "stride": 6,
+                "iterations": 1801386150,
+                "stride": 1,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1484801053,
+                "stride": 2,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1225042149,
+                "stride": 3,
+                "delay": 0,
+                "rank": 2
+            },
+            {
+                "type": "memory_block",
+                "iterations": 2051581426,
+                "stride": 4,
                 "delay": 4,
                 "rank": 1
             },
             {
                 "type": "memory_block",
-                "iterations": 423960377,
+                "iterations": 1500118887,
+                "stride": 5,
+                "delay": 4,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 1081757169,
+                "stride": 6,
+                "delay": 7,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 803514220,
                 "stride": 7,
                 "delay": 1,
                 "rank": 1
             },
             {
                 "type": "memory_block",
-                "iterations": 143316332,
+                "iterations": 547238893,
                 "stride": 8,
-                "delay": 10,
+                "delay": 14,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 290897875,
+                "stride": 9,
+                "delay": 0,
+                "rank": 1
+            },
+            {
+                "type": "memory_block",
+                "iterations": 348127176,
+                "stride": 11,
+                "delay": 15,
                 "rank": 1
             }
         ]

@@ -34,17 +34,17 @@ parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
-center = start_collector(40)
+center = start_collector(0)
 current_time_str = datetime.now().strftime("%Y%m%d-%H%M%S")
-#current_time_str = '20251210-203016'
+#current_time_str = 'paperdata1213/patgen'
 job_dir = os.path.join(dir_path,'result', current_time_str)
 runner = PhaseRunner(job_dir= job_dir)
 '''runner.GetGAConvergencePoint()
 sys.exit()'''
-'''for i in range(15):
-    runner.GetChangePoint(sample_index=i, alg='pelt',args={})
-sys.exit()
-'''
+'''for i in [13]:
+    runner.GetChangePoint(sample_index=i, alg='pelt', args={})
+sys.exit()'''
+
 
 
 generate_costs = []
@@ -54,8 +54,11 @@ for i in range(15):
     time_record_dir = os.path.join(result_dir, 'time_record')
     print(f'start iter{i} at {result_dir}')
     runner = PhaseRunner(job_dir= job_dir, sample_index=i)
-    '''runner.CalcSerialSim()
-    sys.exit()'''
+    '''runner.Evaluate()
+    runner.PhaseEvalute()
+    runner.CalcSerialSim()
+
+    continue'''
     start_time = time.time()
     param_sets = runner.GetParamSets()
     end_time = time.time()
@@ -64,6 +67,7 @@ for i in range(15):
         'iteration': i,
         'generate_cost': elapsed_time
     })
+    continue
     for param_set in param_sets:
         print(f'param_set={param_set}')
         runner.StartAndSaveTime(param_set)
@@ -93,7 +97,7 @@ for i in range(15):
     runner.PhaseEvalute()
 
 runner = PhaseRunner(job_dir= job_dir)
-runner.GetGAConvergencePoint()
+#runner.GetGAConvergencePoint()
 runner.generate_cost_report(cost_csv=generate_costs)
-runner.generate_final_reports()
+#runner.generate_final_reports()
 center.stop()

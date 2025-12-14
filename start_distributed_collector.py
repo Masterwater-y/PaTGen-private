@@ -3,6 +3,8 @@ import sys
 import os
 import traceback
 from configparser import ConfigParser
+
+from workload_runner.common import run_command
 dir_path = os.path.dirname(os.path.realpath(__file__))
 parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
@@ -52,6 +54,8 @@ if __name__ == '__main__':
             exit(0)
         
     elif sys.argv[1] == 'node':
+        command = f'pkill -f hardware; pkill -f perf'
+        run_command(command)
         nodeWorker = NodeWorker()
         nodeWorker.m_node_collector.config_collectors({"ibmc_collector": 1,
                                                        "ftrace_collector": 0, 

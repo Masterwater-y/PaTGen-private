@@ -49,7 +49,6 @@ def derive_targets_from_duration(duration_seconds, cpu_frequency_hz, target_CPI,
     llmiss_target = instr_target * (target_MPKI / 1000.0)
     return cycles_target, instr_target, llmiss_target
 
-
 def optimize_scales(block_feature, targets,
                     weight_cycles=1.0, weight_instr=1.0, weight_ll=1.0,
                     lambda_reg=1.0, reg_k=8.0,
@@ -130,16 +129,22 @@ def synthesize_workload(load_features_file, target_params,
     freq = target_params.get('cpu_frequency_hz', 2.6e9)
 
     # 1) 从 duration 与 freq 推导目标 cycles/instr/llmiss
-    cycles_t, instr_t, llm_t = derive_targets_from_duration(
+    '''cycles_t, instr_t, llm_t = derive_targets_from_duration(
         duration_seconds=target_params['duration'],
         cpu_frequency_hz=freq,
         target_CPI=target_params['CPI'],
         target_MPKI=target_params['MPKI']
     )
+    
     targets = {
         'cycles': cycles_t,
         'instruction': instr_t,
         'll-misses': llm_t
+    }'''
+    targets = {
+        'cycles': target_params['CPI']*target_params['ins'],
+        'instruction': target_params['ins'],
+        'll-misses': target_params['MPKI']*target_params['ins']/1000
     }
     '''print("=== 推导目标指标 ===")
     print(f"目标周期数 cycles: {cycles_t:.2f}")
@@ -157,6 +162,16 @@ def synthesize_workload(load_features_file, target_params,
     print("优化信息:", res.message)
     print("非零缩放系数数量:", np.sum(x_opt > 1e-6))
     print("缩放系数平均值:", np.mean(x_opt))'''
+    target_duration = target_params['duration']
+
+    total_duration_raw = np.sum(block_feature['duration'] * x_opt)
+
+
+    time_scale = target_duration / (total_duration_raw + 1e-12)
+    x_opt = x_opt * time_scale
+    print(f"[Duration Normalize] raw={total_duration_raw:.4f}s "
+        f"-> scaled to {target_duration:.4f}s "
+        f"(scale={time_scale:.6f})")
 
     # 3) 构造最终 param_sets
     valid_mask = x_opt > 1e-6
@@ -207,7 +222,7 @@ def synthesize_workload(load_features_file, target_params,
 
 # ------------------- 脚本入口 -------------------
 if __name__ == "__main__":
-    block_path = 'block.csv'
+    block_path = '../single_rank_block.csv'
     args = sys.argv[1:]
     sample_index = int(args[0]) if len(args) > 0 else 0
     phase_index = int(args[1]) if len(args) > 1 else None
@@ -223,11 +238,18 @@ if __name__ == "__main__":
         duration = float(targets_row['duration'])
         CPI = float(targets_row['CPI'])
         MPKI = float(targets_row['MPKI'])
+        ins = targets_row['instruction']
         freq = float(targets_row['cpu_frequency_hz']) if 'cpu_frequency_hz' in targets_row else 2.6e9
 
-        target_params = {
+        '''target_params = {
             'duration': duration,
             'cpu_frequency_hz': freq,
+            'CPI': CPI,
+            'MPKI': MPKI
+        }'''
+        target_params = {
+            'duration': duration,
+            'ins': ins,
             'CPI': CPI,
             'MPKI': MPKI
         }
@@ -238,7 +260,7 @@ if __name__ == "__main__":
                                                      weight_cycles=1.0,
                                                      weight_instr=1.0,
                                                      weight_ll=1.0,
-                                                     lambda_reg=0.25,
+                                                     lambda_reg=0.2,
                                                      reg_k=8.0)
         res_template_all += template_res
         opt_infos.append(opt_info)

@@ -34,7 +34,7 @@ parent_dir_path = os.path.abspath(os.path.join(dir_path, os.pardir))
 sys.path.insert(0, parent_dir_path)
 os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
-center = start_collector(0)
+center = start_collector(40)
 current_time_str = datetime.now().strftime("%Y%m%d-%H%M%S")
 #current_time_str = 'paperdata/cloudmix-1phase'
 job_dir = os.path.join(dir_path,'result', current_time_str)

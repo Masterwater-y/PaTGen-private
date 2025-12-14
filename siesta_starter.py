@@ -36,14 +36,18 @@ os.chdir(os.path.dirname(os.path.realpath(__file__)))
 
 center = start_collector(40)
 current_time_str = datetime.now().strftime("%Y%m%d-%H%M%S")
-#current_time_str = 'paperdata/linear-1phase'
+#current_time_str = 'paperdata1213/siesta'
 job_dir = os.path.join('result', current_time_str)
 generate_costs = []
-for i in range(15):
+for i in [1,12]:
     result_dir = os.path.join(job_dir, f'tmp{i}')
     perf_dir = os.path.join(result_dir, 'perf')
     time_record_dir = os.path.join(result_dir, 'time_record')
     runner = SiestaRunner(job_dir= job_dir, result_dir=result_dir, sample_index=i)
+    '''runner.Evaluate()
+    runner.CalcSerialSim()
+    runner.PhaseEvalute()
+    continue'''
     phase_num = runner.phase_num
     param_sets = []
     phase_sets=[]

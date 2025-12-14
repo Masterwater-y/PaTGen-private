@@ -69,75 +69,87 @@ def calculate_dtw(self, series1, series2):
         keep_internals=True
     ).distance
 
-def smooth_isolated_outliers(series, threshold_factor=10):
-        """
-        平滑处理孤立异常点，将显著高于其他点的值替换为前后两点的均值
-        处理边界情况：如果异常点在开头或结尾，使用最近的正常值
-        
-        参数:
-        - series: 要处理的Series
-        - threshold_factor: 判断异常的阈值倍数，默认为3
-        """
-        if len(series) <= 2:  # 数据点太少，不进行处理
-            return series
-        
-        # 计算中位数和绝对中位差(MAD)
-        median = series.median()
-        mad = (series - median).abs().median()
-        
-        # 如果MAD为0，使用标准差
-        if mad == 0:
-            std = series.std()
-            if std == 0:  # 所有值都相同，无需处理
-                return series
-            threshold = median + threshold_factor * std
-        else:
-            threshold = median + threshold_factor * 1.4826 * mad  # MAD转换为近似的标准差
-        
-        # 标记异常点
-        outliers = series > threshold
-        
-        # 平滑处理异常点
-        result = series.copy()
-        for i, is_outlier in enumerate(outliers):
-            if is_outlier:
-                # 寻找前一个正常值
-                prev_normal_idx = None
-                for j in range(i-1, -1, -1):
-                    if not outliers[j]:
-                        prev_normal_idx = j
-                        break
-                
-                # 寻找后一个正常值
-                next_normal_idx = None
-                for k in range(i+1, len(series)):
-                    if not outliers[k]:
-                        next_normal_idx = k
-                        break
-                
-                # 根据前后正常值的存在情况处理
-                if prev_normal_idx is not None and next_normal_idx is not None:
-                    # 前后都有正常值，取均值
-                    result[i] = (series[prev_normal_idx] + series[next_normal_idx]) / 2
-                elif prev_normal_idx is not None:
-                    # 只有前一个正常值，用其替换
-                    result[i] = series[prev_normal_idx]
-                elif next_normal_idx is not None:
-                    # 只有后一个正常值，用其替换
-                    result[i] = series[next_normal_idx]
-                # 否则没有找到任何正常值，保留原值
-        
-        return result
+
+def detect_global_outliers(series, factor=10, force_threshold=10, force_clip=True):
+    """
+    返回两个 mask：
+        mask: 短异常段（> factor*mean）
+        force_mask: 大于 force_threshold 的点（是否启用由 force_clip 控制）
+    """
+    mean_val = series.mean()
+    if mean_val == 0:
+        return pd.Series([False]*len(series), index=series.index), pd.Series([False]*len(series), index=series.index)
+
+    s = series.values
+    mask = (s > factor * mean_val)
+    force_mask = (s > force_threshold) if force_clip else np.zeros_like(s, dtype=bool)
+    verbose = False
+    if verbose:
+        for i in range(len(s)):
+            if mask[i] or force_mask[i]:
+                print(f"Index: {i}, Value: {s[i]}, Mean: {mean_val:.4f}")
+    return pd.Series(mask, index=series.index), pd.Series(force_mask, index=series.index)
+
+
+def suppress_short_outlier_segments(mask, max_len=3):
+    """
+    取消连续 >= max_len 的异常段标记
+    """
+    m = mask.copy().values
+    N = len(m)
+    i = 0
+
+    while i < N:
+        if not m[i]:
+            i += 1
+            continue
+
+        start = i
+        while i < N and m[i]:
+            i += 1
+        end = i - 1
+
+        seg_len = end - start + 1
+
+        if seg_len >= max_len:
+            m[start:end+1] = False
+
+    return pd.Series(m, index=mask.index)
+
+
+def smooth_isolated_outliers(df, target_cols, factor=10, force_threshold=10,
+                              force_clip=False, fluctuation_ratio=0.05):
+    RELATED_COLS = [
+        "cycles", "instructions", "L1-misses", "ll-misses/",
+        "CPI", "MPKI", "MPKI_L1",
+        "power", "branches", "branch-misses", "branch-misses-ratio"
+    ]
+
+    df_new = df.copy()
+    short_mask_total = pd.Series(False, index=df.index)
+    force_mask_total = pd.Series(False, index=df.index)
+    for col in target_cols:
+        mask, force_mask = detect_global_outliers(df[col], factor, force_threshold, force_clip)
+        short_mask_total |= mask
+        force_mask_total |= force_mask
+
+    short_mask_total = short_mask_total & (~force_mask_total)
+    to_smooth = suppress_short_outlier_segments(short_mask_total, max_len=4)
+    final_mask = to_smooth | force_mask_total
+    for col in RELATED_COLS:
+        mean_val = df[col].mean()
+        std_val = df[col].std()
+        noise = np.random.randn(final_mask.sum()) * std_val * fluctuation_ratio
+        df_new.loc[final_mask, col] = mean_val + noise
+
+    return df_new
 
 def process_special_boundaries(block_list, target):
     processed_blocks = block_list.copy()
-    
-    # 检查是否只有一个 block
     if len(processed_blocks) == 1:
         block = processed_blocks[0]
-        # 确保 block 和 target 都有 'duration' 键
+
         if 'duration' in block and 'duration' in target:
-            # 强制调整 duration
             block['template'][2] = block['template'][2] * target['duration'] / block['duration']
             block['duration'] = target['duration']
     
@@ -171,6 +183,34 @@ def transform_targets(final_aggr):
     
 
     return output_df
+
+def calc_target(df):
+    total_cycles = df["cycles"].sum()
+    total_insts = df["instructions"].sum()
+    total_llc_miss = df["ll-misses/"].sum()
+
+    # 避免除零
+    if total_insts == 0:
+        cpi = 0
+        mpki = 0
+    else:
+        cpi = total_cycles / total_insts
+        mpki = total_llc_miss * 1000 / total_insts
+
+    row = {
+        "duration": len(df),
+        "cpu_util": df["cpu_util"].mean(),
+        "mem_util": df["mem_util"].mean(),
+        "CPI": cpi,
+        "MPKI": mpki,
+        "disk_util": df["disk_util"].mean(),
+        "power": df["power"].mean(),
+        "mem_capacity": 256,   # 固定
+        "mem_size": 16         # 固定
+    }
+
+    # 返回 DataFrame，方便 to_csv
+    return pd.DataFrame([row])
 
 def evaluate_results(res_def, target_def):
     """
@@ -240,6 +280,8 @@ def evaluate_results(res_def, target_def):
 
 def stage_divide(data, alg='window',args=None,png_path = None):
     import ruptures as rpt
+    import pandas as pd
+    import os
     sample_phase_num = [16,8,3,4,11]
     timestamps = data['time']
     metrics_df = data[['CPI', 'MPKI']]
@@ -432,7 +474,13 @@ def stage_divide(data, alg='window',args=None,png_path = None):
         if alg=='fixed':
             phase_num = args[0]
         elif alg=='sync':
-            phase_num = sample_phase_num[args[0]]
+            base_path = 'sota/stages/1213final'
+            file_name = f"stage{args[0]}/aggr.csv"
+            file_path = os.path.join(base_path, file_name)
+            df = pd.read_csv(file_path)
+            phase_num = int(len(df))
+            #phase_num = 10
+            print(phase_num)
 
         # 计算每个阶段的平均时间（仅用于参考，实际分割可能不均匀）
         avg_time_per_stage = total_time / phase_num

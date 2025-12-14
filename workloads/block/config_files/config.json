@@ -7,9 +7,9 @@
         [
             {
                 "type": "memory_block",
-                "iterations": 10000000000,
+                "iterations": 2000000000,
                 "stride": 12,
-                "rank": 1
+                "rank": 60
             }
         ]
     ]

@@ -33,10 +33,10 @@ class HiBenchRunner(Runner):
         work_map={
             "wordcount":'micro/wordcount/hadoop',
             "terasort":'micro/terasort/hadoop',
-            "pagerank":'graph/pagerank/spark',
             'kmeans':'ml/kmeans/spark',
             'xgboost':'ml/xgboost/spark',
             'join':'sql/join/spark',
+            "nutchindexing":"websearch/nutchindexing/hadoop"
 
         }
         command = f' docker exec hibench bash -lc "cd /opt/hibench && bin/workloads/{work_map[workload]}/run.sh" '
