@@ -39,7 +39,7 @@ current_time_str = datetime.now().strftime("%Y%m%d-%H%M%S")
 #current_time_str = 'paperdata1213/siesta'
 job_dir = os.path.join('result', current_time_str)
 generate_costs = []
-for i in [1,12]:
+for i in range(15):
     result_dir = os.path.join(job_dir, f'tmp{i}')
     perf_dir = os.path.join(result_dir, 'perf')
     time_record_dir = os.path.join(result_dir, 'time_record')

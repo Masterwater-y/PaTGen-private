@@ -105,17 +105,27 @@ def synthesize_workload(load_features_file, target_params):
     block_feature, param_sets = read_load_features(load_features_file)
     # 构建线性方程组
     A, b = build_linear_system(block_feature, target_params)
-    
-    # 求解初始解
     x_initial = solve_initial_solution(A, b)
 
-    x_optimized = x_initial
-    # 迭代优化
-    #x_optimized = iterate_adjustment(block_feature, x_initial, target_params)
+    valid_indices = x_initial > 1e-6  # 初始有效索引（排除极小值）
     
-    # 生成最终执行计划（过滤执行次数为0的基本块）
+    # ========== 第二步：基于初始有效索引计算总duration（仅算有效部分） ==========
+    initial_total_duration = 0.0
+    for i in range(len(x_initial)):
+        if not valid_indices[i]:  # 跳过初始极小值
+            continue
+        # 修复原代码错误：block_feature['duration']需取第i个值
+        duration_val = block_feature['duration'][i]
+        initial_total_duration += x_initial[i] * duration_val
+    
+    # ========== 第三步：边界检查 + 计算缩放系数 ==========
+    target_duration = target_params['duration']
+    if abs(initial_total_duration) < 1e-6:
+        raise ValueError(f"初始有效总duration接近0，无法校准到目标值{target_duration}")
+    adjustment_factor = target_duration / initial_total_duration
 
-    valid_indices = x_optimized > 1e-6  # 忽略极小值（视为零）
+    # ========== 第四步：缩放所有初始值（包括极小值，后续仍会过滤） ==========
+    x_optimized = x_initial * adjustment_factor  # 直接向量乘法（更简洁）
 
     cycle=0
     instruction = 0 
@@ -158,7 +168,8 @@ for _, targets_row in aggr_df.iterrows():
         if _!=phase_index:
             continue
 
-    instructions = targets_row['duration']*2.6*10e8
+    #instructions = targets_row['duration']*2.6*10e8
+    instructions = targets_row['instruction']
     targets = {
         "cycles":targets_row['CPI']*instructions,
         "ll-misses/":targets_row['MPKI']*instructions/1000,

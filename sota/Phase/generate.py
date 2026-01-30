@@ -635,10 +635,16 @@ def process_special_boundaries(block_list, target):
     if len(block_list) == 1:
         block = block_list[0]
         # 确保 block 和 target 都有 'duration' 键
-        if 'duration' in block and 'duration' in target:
-            block['template'][2] = block['template'][2] * target['duration'] / block['duration']
-            block['duration'] = int(target['duration'])
+        scale = target['duration'] / block['duration']
 
+        # 放缩 template 中的 duration（假设 block['template'][2] 是 duration）
+        if 'template' in block and len(block['template']) >= 3:
+            block['template'][2] = int(block['template'][2] * scale)
+
+        for key in ['cycles', 'instructions', 'llmiss', 'iters']:
+            if key in block:
+                block[key] = block[key] * scale
+        block['delay'] = 0
     return block_list
 
 def generate_template(block_list):
@@ -1233,8 +1239,8 @@ def optimize_block_schedule_ga(
     elite_k: int = 2,
     # ===== loss weights =====
     w_level: float = 1.0,
-    w_shape: float = 1.0,
-    w_order: float = 0.0,
+    w_shape: float = 0.5,
+    w_order: float = 0.5,
 ) -> Dict:
 
     eps = 1e-10
@@ -2293,7 +2299,7 @@ for i, aggr_row in aggr_df.iterrows():
     #print(result)
     block_list = process_special_boundaries(block_list,targets)
     tmp = None
-    if args.delay_iters:
+    if args.delay_iters and len(block_list)>1:
         tmp = optimize_block_schedule_ga(block_list,perf_targets,generations=args.delay_iters)
         delay = tmp['delays']
         for j in range(len(delay)):

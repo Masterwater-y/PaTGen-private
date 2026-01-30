@@ -1,3 +1,4 @@
+from math import log, sqrt
 import pandas as pd
 import subprocess
 import time
@@ -8,6 +9,7 @@ from scipy.stats import mannwhitneyu
 from scipy.stats import variation
 from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
+
 def returnTime(func):
     def wrapperStartBenchmark(self, param_set):
         begin = int(time.time())
@@ -336,67 +338,49 @@ def stage_divide(data, alg='window',args=None,png_path = None):
                 prev = cp
             stages.append((prev, len(metrics_df)-1))
     elif alg == 'pelt':
-        # -----------------------------
-        # 1. 从 metrics_df 构造自定义 cost 的 feature 序列
-        # -----------------------------
         import numpy as np
-        import pandas as pd
-        from statsmodels.tsa.stattools import acf
+        import ruptures as rpt
+
+        # -----------------------------
+        # 1. 准备原始性能序列（不做滑窗）
+        # -----------------------------
         # metrics_df: shape (N, D)
-        raw = metrics_df.values
-        N, D = raw.shape
-        # 可调参数
-        window = args.get("window", min(20,N//10))      # 滑动窗口长度
-        use_adf = args.get("use_adf", False) # 是否加ADF（默认关）
-        penalty  = args.get("penalty", 3.0)  # PELT的pen
-
-
-
-        feat_list = []
-        feat_index_map = []   # 记录 feature 对应原始 index（窗口中心）
-
-        # 滑动窗口构造 local features
-        for i in range(N - window + 1):
-            w = raw[i:i+window]    # shape (window, D)
-
-            row = []
-            for d in range(D):
-                vec = w[:, d]
-                mean = np.nanmean(vec)
-                var  = np.nanvar(vec)
-                std  = np.sqrt(var) + 1e-8
-                cv   = std / (abs(mean) + 1e-8)
-
-                # acf1
-                try:
-                    acf_val = acf(vec, nlags=1, fft=False)
-                    acf1 = float(acf_val[1])
-                except:
-                    acf1 = 0.0
-
-                row.extend([mean, var, cv, acf1])
-
-            feat_list.append(row)
-            feat_index_map.append(i + window - 1)
-
-        feat = np.array(feat_list)     # shape = (N-window+1, 4D)
-        M = len(feat)
+        X = metrics_df.values.astype(float)
+        X = (X - X.mean(axis=0)) / (X.std(axis=0) + 1e-8)
+        N, D = X.shape
 
         # -----------------------------
-        # 2. 在 feature 序列上运行 PELT
+        # 2. PELT 参数（语义级）
         # -----------------------------
-        algo = rpt.Pelt(model='l2', min_size=max(3, window//2)).fit(feat)
-        cps_feat = algo.predict(pen=penalty)
-        cps_feat = [cp for cp in cps_feat if cp < M]  # 去掉末尾点
+        # 最小 phase 长度（你对 phase 的“语义定义”）
+        min_size = max(8, int(0.05 * N))
+        min_size = min(min_size, N // 3)
 
-        # 将 feature 时间轴的变点映射回原始时间轴
-        cps = [ feat_index_map[cp] for cp in cps_feat if cp < len(feat_index_map) ]
+
+        # penalty 必须与维度和序列长度同尺度
+        # 这是一个稳健的经验设置
+        penalty = args.get(
+            "penalty",
+            0.55*D
+        )
+
+        # -----------------------------
+        # 3. 运行 PELT（variance-sensitive）
+        # -----------------------------
+        algo = rpt.Pelt(
+            model="rbf",      # 对段内波动 + 均值变化都敏感
+            min_size=min_size
+        ).fit(X)
+
+        cps = algo.predict(pen=penalty)
+
+        # 去掉末尾点（ruptures 习惯性加 N）
+        cps = [cp for cp in cps if cp < N]
         cps = sorted(list(set(cps)))
 
         # -----------------------------
-        # 3. 构造 stages (与你原来一致)
+        # 4. 构造 stages（与你原来一致）
         # -----------------------------
-        print(cps)
         stages = []
         prev = 0
         for cp in cps:
@@ -405,10 +389,15 @@ def stage_divide(data, alg='window',args=None,png_path = None):
         stages.append((prev, N - 1))
 
         # -----------------------------
-        # 4. 画图（保持你原来风格）
+        # 5. 画图（保持你原来风格）
         # -----------------------------
         if png_path is not None:
-            fig, axes = plt.subplots(metrics_df.shape[1], 1, figsize=(12, 6), sharex=True)
+            fig, axes = plt.subplots(
+                metrics_df.shape[1],
+                1,
+                figsize=(12, 6),
+                sharex=True
+            )
             if metrics_df.shape[1] == 1:
                 axes = [axes]
 
@@ -422,6 +411,7 @@ def stage_divide(data, alg='window',args=None,png_path = None):
             plt.savefig(png_path)
 
         return stages
+
 
 
     elif alg == 'fixed' or alg == 'sync':

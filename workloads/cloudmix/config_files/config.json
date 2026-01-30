@@ -7,70 +7,35 @@
         [
             {
                 "type": "memory_block",
-                "iterations": 3589743584,
-                "stride": 12,
-                "delay": 0,
-                "rank": 4
-            },
-            {
-                "type": "add_block",
-                "iterations": 29166666648,
-                "delay": 0,
-                "rank": 9
-            },
-            {
-                "type": "div_block",
-                "iterations": 3636363612,
-                "delay": 0,
-                "rank": 2
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 560000000,
-                "delay": 0,
-                "rank": 13
-            }
-        ],
-        [
-            {
-                "type": "memory_block",
-                "iterations": 641025640,
-                "stride": 12,
-                "delay": 0,
-                "rank": 3
-            },
-            {
-                "type": "add_block",
-                "iterations": 5208333330,
-                "delay": 0,
-                "rank": 4
-            },
-            {
-                "type": "sqrt_block",
-                "iterations": 100000000,
-                "delay": 0,
-                "rank": 7
-            }
-        ],
-        [
-            {
-                "type": "memory_block",
-                "iterations": 1410256408,
+                "iterations": 5641025632,
                 "stride": 12,
                 "delay": 0,
                 "rank": 2
             },
             {
+                "type": "memory_block",
+                "iterations": 5789473668,
+                "stride": 8,
+                "delay": 0,
+                "rank": 1
+            },
+            {
                 "type": "add_block",
-                "iterations": 11458333326,
+                "iterations": 45833333304,
                 "delay": 0,
                 "rank": 6
             },
             {
-                "type": "sqrt_block",
-                "iterations": 220000000,
+                "type": "div_block",
+                "iterations": 5714285676,
                 "delay": 0,
-                "rank": 8
+                "rank": 1
+            },
+            {
+                "type": "sqrt_block",
+                "iterations": 880000000,
+                "delay": 0,
+                "rank": 9
             }
         ]
     ]
